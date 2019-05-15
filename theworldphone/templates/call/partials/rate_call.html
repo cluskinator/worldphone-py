@@ -1,0 +1,107 @@
+
+<div class="row">
+  <div class="col-lg-12">
+    <div class="page-header" style="margin-top:0px;">
+      <h4>Rate your call.</h4>
+    </div>
+  </div>
+
+
+  <div id="rate-call-feedback" class="col-lg-6 hidden">
+    <div class="panel panel-default">
+
+      <div class="panel-body alert-success">
+
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6 rate-hide">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <label>Vocabulary</label>
+        <input name="vocabulary" type="number" class="rating" value=1>
+        <br>
+        <label>Accent</label>
+        <input name="accent" type="number" class="rating" value=1>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6 rate-hide">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <label>Grammar</label>
+        <input name="grammar" type="number" class="rating" value=1>
+        <br>
+        <label>Overall Skill</label>
+        <input name="skill" type="number" class="rating" value=1>
+      </div>
+    </div>
+  </div>
+
+  <!-- if call is tefl and partner was tefl / not student -->
+  <!-- display tefl specific ratings -->
+  <!-- user_type of one indicates that the current user was a student, therefore they should be rating the instructor -->
+  {% if user_type == 1 %}
+  <div class="col-lg-6 rate-hide">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <label>Ability</label>
+        <input name="ability" type="number" class="rating" value=1>
+        <br>
+        <label>Clarity</label>
+        <input name="clarity" type="number" class="rating" value=1>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="col-lg-12 text-right rate-hide">
+    <button id="rate_caller" class="btn btn-default">Submit</button>
+  </div>
+
+</div>
+
+
+<hr>
+
+<div class="row">
+
+  <div class="col-lg-12">
+
+      <div class="panel-group" id="accordion">
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne"><span class="glyphicon glyphicon-flag"></span> Report Inappropriate Behavior</a>
+                </h4>
+            </div>
+            <div id="collapseOne" class="panel-collapse collapse">
+                <div class="panel-body">
+                  <div class="col-lg-4">
+                    <h5>Type</h5>
+                    <select name="flag-type" class="multiselect has-danger" multiple="multiple">
+                      <option value="0">Verbal</option>
+                      <option value="1">Sexual</option>
+                      <option value="2">Other</option>
+                    </select>
+
+                  </div>
+
+                  <div class="col-lg-8">
+                    <h5>Comments <small>(optional)</small></h5>
+                    <textarea name="flag-comments" class="form-control"></textarea>
+                  </div>
+
+                  <div class="col-lg-12 text-right" style="margin-top:20px;">
+                    <button id="report_caller" class="btn btn-default">Send Report</button>
+                  </div>
+                </div>
+            </div>
+        </div>
+      </div>
+
+  </div><!-- /.col-lg-12 -->
+
+</div><!-- /.row -->

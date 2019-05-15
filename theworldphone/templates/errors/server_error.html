@@ -1,0 +1,23 @@
+
+{% extends 'errors/layout.html' %}
+
+{% set page_title = _('500 - Server Error') %}
+
+{% block body %}
+<div class="container">
+<div class="row">
+  <div class="col-sm-12">
+
+    <div class="page-header">
+      <h1>{{ _('Server Error') }} <small>500</small></h1>
+    </div>
+
+      <p>There was an internal server error. We are very sorry for the inconvenience.</p>
+      <p>Please <a href="{{ url_for('admin.login') }}">log in</a> and then try again.</p>
+      <br>
+      <p>If you think this is the result of an error, please contact us.</p>
+
+  </div>
+</div>
+</div>
+{% endblock %}

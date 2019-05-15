@@ -1,0 +1,126 @@
+// Button colors
+@mixin button-color($btn-color, $color: #FFF) {
+    background-color: $btn-color;
+    color: $color;
+
+    &:hover,
+    &:focus {
+        background-color: shade($btn-color, 20%);
+        color: $color;
+    }
+
+    &:disabled {
+        &:hover {
+            background-color: $btn-color;
+        }
+    }
+
+    i.fa {
+        color: $color;
+    }
+}
+
+// Make non-buttons (e.g., icons) behave more button-ly
+@mixin buttonesque-color($color) {
+    color: $color;
+
+    &:hover,
+    &:focus {
+        color: shade($color, 20%);
+    }
+
+    &:disabled {
+        &:hover {
+            color: $color;
+        }
+    }
+}
+
+// Modified light buttons
+@mixin light-buttonesque($btn-color: $gallery, $color: $periwinkle) {
+    @include button-color($btn-color, $color);
+
+    &:hover, &:focus {
+        background-color: shade($btn-color, 10%);
+        color: shade($color, 10%);
+    }
+}
+
+// Badge colors
+@mixin badge-color($badge-color: $light-gray, $color: $base-font-color) {
+    background-color: $badge-color;
+    color: $color;
+}
+
+// Flex container
+@mixin flex-parent($direction: row) {
+    @include display(flex);
+    @include flex-direction($direction);
+}
+
+// Vertical flex container
+@mixin flex-column {
+    @include flex-parent(column);
+}
+
+// Horizontal flex container
+@mixin flex-row {
+    @include flex-parent(row);
+}
+
+// Flex element within container
+@mixin flex-child($flex: 1, $grow: 1) {
+    @if $flex { @include flex($flex); }
+    @if $grow { @include flex-grow($grow); }
+}
+
+// Extra flex specs
+//     $align-items: flex-start | flex-end | center | baseline | stretch
+//     $align-self: auto | flex-start | flex-end | center | baseline | stretch
+//     $basis: <length> | auto
+//     $justify: flex-start | flex-end | center | space-between | space-around
+//     $shrink: <number>
+//     $wrap: nowrap | wrap | wrap-reverse
+@mixin flextra($flextra) { // TODO: replace map with arglist... so no more "@include flextra((...));" nonsense
+   // ...for flex-parent
+   @if map-has-key($flextra, 'align-items') { @include align-items(map-get($flextra, 'align-items')); }
+   @if map-has-key($flextra, 'justify')     { @include justify-content(map-get($flextra, 'justify')); }
+   @if map-has-key($flextra, 'wrap')        { @include flex-wrap(map-get($flextra, 'wrap')); }
+   // ...for flex-child
+   @if map-has-key($flextra, 'align-self') { @include align-self(map-get($flextra, 'align-self')); }
+   @if map-has-key($flextra, 'basis')      { @include flex-basis(map-get($flextra, 'basis')); }
+   @if map-has-key($flextra, 'shrink')     { @include flex-shrink(map-get($flextra, 'shrink')); }
+}
+
+// Based on `size` mixin from Bourbon
+@mixin min-or-max-size($value, $mm) {
+    $width: nth($value, 1);
+    $height: $width;
+
+    @if length($value) > 1 {
+        $height: nth($value, 2);
+    }
+    @if is-size($height) {
+        @if $mm == 'min' { min-height: $height; }
+        @if $mm == 'max' { max-height: $height; }
+    } @else {
+        @warn "`#{$height}` is not a valid length for the `$height` parameter in the `#{$mm}-size` mixin.";
+    }
+
+    @if is-size($width) {
+        @if $mm == 'min' { min-width: $width; }
+        @if $mm == 'max' { max-width: $width; }
+    } @else {
+        @warn "`#{$width}` is not a valid length for the `$width` parameter in the `#{$mm}-size` mixin.";
+    }
+}
+
+// Consistent min-size
+@mixin min-size($value) {
+    @include min-or-max-size($value, 'min');
+}
+
+// Consistent max-size
+@mixin max-size($value) {
+    @include min-or-max-size($value, 'max');
+}

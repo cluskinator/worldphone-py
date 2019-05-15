@@ -1,0 +1,78 @@
+////////// Table
+
+.call-history table.minimal {
+    font-size: $big-font-size;
+
+    td[colspan='5']:before {
+        content: '';
+        width: 0;
+
+    }
+
+    @include media($large-screen) {
+        tr > th, tr > td {
+            width: 20%;
+
+            &:nth-child(2), &:nth-child(3) {
+                width: 25%;
+            }
+
+            &:last-child {
+                width: 10%;
+            }
+
+            &[colspan='5'] {
+                text-align: center;
+            }
+        }
+    }
+}
+
+
+////////// Search bar
+
+.search-bar {
+    $search-bar-border: $base-border;
+    $search-bar-background: lighten($base-border-color, 10%);
+    $search-bar-font-family: $base-font-family;
+    $search-bar-font-size: $big-font-size;
+    $search-bar-spacing: $smaller-spacing;
+
+    float: right;
+    margin-bottom: $small-spacing;
+    position: relative;
+    width: 100%;
+
+    @include media($medium-screen-and-up) {
+        margin: -$small-spacing * 2 auto $small-spacing;
+        width: 50%;
+    }
+
+    @include media($large-screen) {
+        width: 25%;
+    }
+
+    input[type=search] {
+        @include appearance(none);
+        @include transition(border-color);
+        background-color: white;
+        border-radius: $search-bar-font-size * 5;
+        border: $search-bar-border;
+        box-sizing: border-box;
+        display: block;
+        float: right;
+        font-family: $search-bar-font-family;
+        font-size: $search-bar-font-size;
+        margin: 0;
+        padding: $search-bar-spacing;
+        padding-left: 2em;
+        width: 100%;
+    }
+
+    i.fa {
+        float: left;
+        font-size: $base-font-size;
+        margin-left: 1em;
+        margin-top: -1.55em;
+    }
+}

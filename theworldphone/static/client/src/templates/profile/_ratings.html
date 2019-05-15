@@ -1,0 +1,8 @@
+<li>
+    <h3>{{ category | titleize }} <small>{{ score | percentage:1 }}</small></h3>
+    <div class="ratings">
+        <i ng-repeat="n in [1,2,3,4,5]" class="fa fa-{{ profile.ratingIcons[category] }}" ng-class="(score * 4.0) + 1 >= n ? 'x' : 'o'">
+            <span>{{ category }} icon</span>
+        </i>
+    </div>
+</li>

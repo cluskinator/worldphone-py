@@ -1,0 +1,135 @@
+table {
+    border-collapse: collapse;
+    font-feature-settings: "kern", "liga", "tnum";
+    margin: $small-spacing 0;
+    table-layout: fixed;
+    width: 100%;
+}
+
+th {
+    border-bottom: 1px solid shade($base-border-color, 25%);
+    font-weight: 600;
+    padding: $small-spacing 0;
+    text-align: left;
+}
+
+td {
+    border-bottom: $base-border;
+    padding: $small-spacing 0;
+}
+
+tr,
+td,
+th {
+    vertical-align: middle;
+}
+
+
+////////// Minimal table styles
+
+$table-border-color: $base-border-color;
+
+table.minimal {
+    $table-background: $base-background-color;
+    $table-header-background: lighten($table-background, 10);
+    $table-hover-background: darken($table-background, 2);
+    $table-stripe-background: darken($table-background, 4);
+    $table-stripe-background-hover: darken($table-stripe-background, 5);
+    $table-padding: 0.5em;
+
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+
+    tbody {
+        tr:hover > td, tr:hover > th {
+            background-color: $table-hover-background;
+        }
+        tr:first-child td {
+            border-top: 2px solid $table-border-color;
+        }
+    }
+
+    thead {
+        th {
+            border-bottom: 0px;
+            padding: $table-padding;
+            text-align: left;
+        }
+    }
+
+    tbody {
+        font-family: $base-font-family;
+        font-size: $big-font-size;
+
+        tr {
+            border-top: 0px;
+            border-bottom: 1px solid $table-border-color;
+        }
+
+        td {
+            line-height: $base-line-height;
+            padding: $table-padding;
+        }
+    }
+}
+
+////////// Responsive table (from codepen.io/geoffyuen/pen/FCBEg)
+
+table.responsive {
+    min-width: $medium-screen-size / 2;
+
+    th {
+        display: none; // Use visually hidden method for accessibility
+    }
+
+    td {
+        display: block;
+
+        &:before {
+            @extend .h2;
+            content: attr(data-th)" ";
+            display: inline-block;
+            font-size: 18px !important;
+            width: 38%;
+
+            @media (min-width: $medium-screen-size) {
+                display: none;
+            }
+        }
+    }
+
+    th, td {
+        text-align: left;
+
+        @media (min-width: $medium-screen-size) {
+            display: table-cell;
+        }
+    }
+
+    @include media($small-screen) {
+        font-size: $base-font-size;
+        text-align: right;
+    }
+}
+
+
+////////// Overlap
+
+table.minimal.responsive {
+    @include media($small-screen) {
+        td {
+            border-bottom: none;
+            padding-top: 0;
+            padding-bottom: $smaller-spacing / 2;
+            white-space: nowrap;
+        }
+        td:first-child {
+            padding-top: $smaller-spacing;
+        }
+        td:last-child {
+            border-bottom: 1px solid $table-border-color;
+            padding-bottom: $smaller-spacing;
+        }
+    }
+}

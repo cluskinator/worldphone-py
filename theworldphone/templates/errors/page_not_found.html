@@ -1,0 +1,23 @@
+
+{% extends 'errors/layout.html' %}
+
+{% set page_title = _('404 - Page Not Found') %}
+
+{% block body %}
+<div class="container">
+<div class="row">
+  <div class="col-sm-12">
+
+    <div class="page-header">
+      <h1>{{ _('Page Not Found') }} <small>404</small></h1>
+    </div>
+
+      <p>Something is missing here.</p>
+      <p>Try <a href="{{ url_for('admin.login') }}">logging in</a>.</p>
+      <br>
+      <p>If you think this is the result of an error, please contact us.</p>
+
+  </div>
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,38 @@
+
+{% extends "admin/layout.html" %}
+
+{% block body %}
+<div class="container">
+    <h3 class="page-header">Pending TEFL Requests</h3>
+    <table class='table table-bordered datatable'>
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Status</th>
+                <th>Role</th>
+                <th>Created Time</th>
+                <th></th>
+            </tr>
+        </thead>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.name }}</td>
+            <td>{{ user.status.capitalize() }}</td>
+            <td>{{ user.role.capitalize() }}</td>
+            <td>{{ user.created_time|format_date }}</td>
+            <td>
+                <a class="glyphicon glyphicon-ok" style="color:#5cb85c" href="{{ url_for('admin.appr_tefl', uid=user.uid, code=1) }}"></a>
+                <a class="glyphicon glyphicon-ban-circle" style="color:red" href="{{ url_for('admin.appr_tefl', uid=user.uid, code=0) }}"></a>
+            </td>
+
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<script>
+$(document).ready(function() {
+    $('table.datatable').dataTable();
+});
+</script>
+{% endblock %}

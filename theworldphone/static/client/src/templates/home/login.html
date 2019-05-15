@@ -1,0 +1,12 @@
+<div class="signup hero">
+    <div class="inner">
+        <hgroup class="alt">
+            <h1>welcome to worldphone.</h1>
+            <h2>we help you practice English with someone else who wants to practice.</h2>
+        </hgroup>
+        <a ng-hide="auth.isAuthenticated" ng-click="login()" class="big button">login</a>
+        <a ng-show="auth.isAuthenticated" ui-sref="profile" class="big button">back to profile</a>
+
+        <span ng-show="banned" class="error">Your account has been banned.</span>
+    </div>
+</div>

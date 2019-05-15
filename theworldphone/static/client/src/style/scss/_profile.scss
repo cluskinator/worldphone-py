@@ -1,0 +1,244 @@
+$profile-divider: 2px solid transparentize($light-gray, 0.75);
+
+////////// Profile
+
+.inner.profile {
+    @include flex-column;
+    width: 100%;
+}
+
+#user-info hgroup, #user-info #stats, #languages {
+    padding-left: $small-spacing;
+}
+
+#user-info {
+    @include fill-parent;
+    margin-bottom: $base-spacing;
+
+    hgroup {
+        margin-bottom: $small-spacing;
+
+        img + h1 + h2 i {
+            &, &:hover {
+                cursor: pointer;
+            }
+        }
+
+        @include media($large-screen) {
+            margin-bottom: 0;
+        }
+    }
+
+    #stats {
+        ul {
+            $stats-color: $heading-font-color;
+            $ul-padding: $small-spacing;
+
+            color: $stats-color;
+            padding: 0 $ul-padding $ul-padding 0;
+
+            li {
+                border-right: $profile-divider;
+                display: inline-block;
+                float: left;
+                margin-right: $small-spacing;
+                padding: $smaller-spacing $small-spacing $smaller-spacing 0;
+
+                &:first-child {
+                    padding-left: 0;
+                }
+
+                &:last-child {
+                    border-right: 0;
+                }
+            }
+
+            li > span {
+                &.h2 {
+                    display: block;
+                    margin-bottom: $smaller-spacing;
+                }
+
+                &:not(.h2) {
+                    font-family: $base-font-family;
+                    font-size: 1.5em;
+                }
+            }
+
+            @include media($large-screen) {
+                float: right;
+            }
+        }
+    }
+}
+
+#performance {
+    $performance-spacing: $small-spacing;
+
+    @include fill-parent;
+
+    h2 {
+        border-bottom: $profile-divider;
+        padding-bottom: $performance-spacing;
+    }
+
+    #languages {
+        $language-background-color: $gallery;
+        $language-color: $heading-font-color;
+        $language-spacing: $smaller-spacing;
+
+        @include omega;
+
+        & > div:last-of-type ul.languages + .selector ul {
+            bottom: 4em;
+        }
+
+        ul.languages {
+            @include flex-row;
+            @include flextra((wrap: wrap)); // TODO: map vs arglist...
+            margin-bottom: $base-spacing;
+
+            li {
+                @include flex-child(1, 0);
+                @include flextra((basis: 6em)); // TODO: map vs arglist...
+                background-color: $language-background-color;
+                border: $base-border;
+                border-radius: $base-border-radius;
+                color: $language-color;
+                display: inline-block;
+                font-family: $base-font-family;
+                font-size: $biggest-font-size;
+                margin: $language-spacing ($language-spacing * 2) $language-spacing 0;
+                padding: $language-spacing ($language-spacing * 2);
+
+                &:first-child {
+                    margin-left: 0;
+                }
+            }
+        }
+
+        & > div > ul.languages li:hover {
+            background-color: rgba($red, 0.25);
+            border-color: rgba($red, 0.5);
+        }
+
+        .selector {
+            margin-top: -$base-spacing;
+            width: 12em;
+        }
+
+        i.fa {
+            @include buttonesque-color($base-font-color);
+            font-size: $bigger-font-size;
+
+            &.stop {
+                @include buttonesque-color($red);
+            }
+
+            &.go {
+                @include buttonesque-color($fern);
+                @include position(absolute, 0 0 null null);
+                margin-left: $bigger-font-size;
+            }
+
+            &:not(.go) {
+                margin-top: $performance-spacing;
+            }
+        }
+    }
+
+    #ratings {
+        padding-bottom: $navigation-height * 2;
+
+        h2 {
+            margin-bottom: 0;
+            padding-left: $performance-spacing;
+        }
+
+        & > div {
+            border-left: $profile-divider;
+            padding-top: $performance-spacing;
+        }
+
+        ul {
+            border-left: 3px solid $purple;
+            margin-left: $performance-spacing;
+            padding-left: $performance-spacing;
+
+            li {
+                &:first-of-type h3 {
+                    margin-top: 0;
+                }
+
+                h3 {
+                    font: normal 1.5em $base-font-family;
+                    margin-top: $performance-spacing;
+                    margin-bottom: 0;
+                    width: 100%;
+
+                    small {
+                        float: right;
+                        margin-right: $performance-spacing;
+                    }
+                }
+            }
+        }
+
+        .ratings {
+            @include flex-row;
+            @include flextra((align-items: stretch));
+            width: 100%;
+
+            @include media($medium-screen) {
+                max-width: $large-screen-size / 4;
+            }
+
+            i.fa {
+                $filled-color: $base-font-color;
+                $unfilled-color: lighten($filled-color, 25%);
+
+                @include flex-child;
+                font-size: $biggest-font-size;
+
+                &.x {
+                    color: $filled-color;
+                }
+
+                &.o {
+                    color: $unfilled-color;
+                }
+            }
+        }
+    }
+
+    @include media($large-screen) {
+        @include display(flex);
+
+        #ratings ul li h3 {
+            margin-bottom: -$performance-spacing;
+        }
+    }
+}
+
+
+////////// Edit profile modal
+
+.profile .edit-profile.modal .modal-container {
+    top: 10%;
+
+    .modal-content {
+        padding-top: 0;
+
+        h3 {
+            margin-top: $small-spacing;
+        }
+
+        .selector:not(:last-of-type) label {
+            margin-bottom: 0;
+        }
+
+        .button-group {
+            margin-bottom: $base-spacing;
+        }
+    }
+}

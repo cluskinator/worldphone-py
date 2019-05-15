@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>{% block title %}{{ page_title|default(_('Project')) }}{% endblock %}</title>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        <link rel="shortcut icon" href="{{ url_for('static', filename='flat-ui/images/favicon.ico') }}">
+        <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Nunito:300' type='text/css">
+        <link rel="stylesheet" href="{{ url_for('static', filename='flat-ui/bootstrap/css/bootstrap.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='flat-ui/css/flat-ui.css') }}">
+        <!-- Using only with Flat-UI (free)-->
+        <link rel="stylesheet" href="{{ url_for('static', filename='common-files/css/icon-font.css') }}">
+        <!-- end -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+        <script src="{{ url_for('static', filename='common-files/js/jquery-1.10.2.min.js') }}"></script>
+        <style type="text/css">
+          html,body {
+            font-family: 'Nunito', sans-serif;
+            height:100%;
+          }
+
+          a, h1, h2, h3, h4, h5, h6 {
+            font-family: 'Nunito', sans-serif;
+          }
+
+          a.brand {
+            font-family: 'Nunito', sans-serif !important;
+          }
+
+          /* Custom container */
+          .container-full {
+            margin: 0 auto;
+            width: 100%;
+            min-height:100%;
+            overflow:hidden;
+          }
+
+          .container-full a {
+            color:#efefef;
+            text-decoration:none;
+          }
+
+          .v-center {
+            z-index: 2;
+          }
+
+        </style>
+    </head>
+
+    <body>
+
+    <div class="container-full header-15-sub">
+        <div class="background">
+                    &nbsp;
+                </div>
+
+          <div class="row">
+
+            <div class="col-lg-12 text-center v-center">
+
+                <div class="hero-unit">
+                    <h1>{{ _('You are a learner.') }}</h1>
+                    <!-- <div class="fui-phone"></div> -->
+                    <div><span style="font-size:42px;margin-bottom: 15px;" class="glyphicon glyphicon-phone-alt"></span></div>
+                    <p>
+                        THE WORLD PHONE
+                    </p>
+                    <h4 style="color: white;">{{ _('Speak a foreign language. Share ideas. Communicate.') }}</h4>
+                </div>
+
+            </div>
+
+          </div> <!-- /row -->
+
+          <div class="row">
+
+            <div class="col-lg-12 text-center v-center" style="font-size:39pt;">
+
+              <form class="col-lg-12">
+                <div class="input-group" style="width:340px;text-align:center;margin:0 auto;margin-top:3%;">
+                <input id="subscribe-form" name="emailsub" class="form-control input-lg" title="Don't worry. We hate spam, and will not share your email with anyone." placeholder="Enter your email address" type="text">
+                  <span class="input-group-btn"><button id="send-subscribe" class="btn btn-lg btn-default" type="button">OK</button></span>
+                </div>
+                <p id="subscription-success" class="help-text hidden subscribe-message">{{ _('You have been subscribed to our mailing list!') }}</p>
+              </form>
+
+            </div>
+
+          </div>
+
+        <br><br><br><br><br>
+
+    </div> <!-- /container full -->
+
+        <script type='text/javascript'>
+
+        $(document).ready(function() {
+          $('#send-subscribe').click(function () {
+            var emailsub = $('input[name=emailsub]');
+            var emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+
+            if (emailsub.val()==''  || emailsub.val()=='enter your active email') {
+
+              $('#subscribe-form').val('')
+              return false;
+            }
+
+            else if(!emailsub.val().match(emailRegex)) {
+                $('#email-subscribe').val('')
+                $('#format-error').removeClass('hidden')
+                $('#email-subscribe').attr('placeholder', 'Please enter a VALID email')
+               return false;
+            }
+            else emailsub.removeClass('error-newsletter');
+
+          //organize the data properly
+          var data =  {
+                'email': emailsub.val()
+          }
+
+          //start the ajax
+            $.ajax({
+            //this is the php file that processes the data and send mail
+                url: "{{ url_for('chimp.subscribe') }}",
+
+                //GET method is used
+                type: "POST",
+
+                contentType: 'application/json',
+
+                //pass the data
+                data: JSON.stringify(data),
+
+                //Do not cache the page
+                cache: false,
+
+                //success
+                success: function (result) {
+
+                    if (result['result'] === "The email has been successfully subscribed") {
+                        //hide the for
+
+
+                        //show the success message
+                        $('#email-form-group').removeClass('has-error')
+                        // $('#subscribe-form').fadeOut('slow')
+                        emailsub.val('')
+                        $('#subscription-success').removeClass('hidden')
+
+                        // Disable send button
+                        //$('#send').attr('disabled',true);
+
+                        //if process.php returned 0/false (send mail failed)
+                    }
+                    else {
+                      alert(result['result'])
+                    }
+                }
+            });
+
+            //cancel the submit button default behaviours
+            return false;
+          });
+        });
+        </script>
+        <!-- Placed at the end of the document so the pages load faster -->
+
+        <script src="{{ url_for('static', filename='flat-ui/js/bootstrap.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='common-files/js/modernizr.custom.js') }}"></script>
+        <script src="{{ url_for('static', filename='common-files/js/jquery.scrollTo-1.4.3.1-min.js') }}"></script>
+        <script src="{{ url_for('static', filename='common-files/js/jquery.parallax.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='common-files/js/startup-kit.js') }}"></script>
+        <script src="{{ url_for('static', filename='common-files/js/jquery.backgroundvideo.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+        <script src="{{ url_for('static', filename='vendor/unslider/unslider.min.js') }}"></script>
+    </body>
+</html>

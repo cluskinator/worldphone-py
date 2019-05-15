@@ -1,0 +1,202 @@
+.hero {
+    $base-hero-height: 900px;
+    $base-hero-spacing: 3.5em;
+    $marketing-image: '../assets/img/marketing_page_bg.jpg';
+    $marketing-pattern: '../assets/img/dots_@2x_transparent.png';
+    $signup-image: '../assets/img/wp_signup_bg.jpg';
+
+    @include fill-parent;
+
+    & > .inner {
+        @include clearfix;
+        margin: auto;
+        padding: $base-hero-spacing;
+        text-align: center;
+    }
+
+    hgroup {
+        margin-bottom: $base-hero-spacing * 3;
+    }
+
+    // Main marketing hero
+    &.hello {
+        $marketing-background-color: $violet; // fallback
+        $marketing-color: $wild-sand;
+        $marketing-height: $base-hero-height;
+        $marketing-spacing: $base-hero-spacing * 7;
+
+        @include background(url($marketing-pattern) top/10% repeat,
+                            url($marketing-image) top/cover no-repeat $marketing-background-color);
+        color: $marketing-color;
+        height: $marketing-height;
+
+        & > .inner {
+            padding-top: $marketing-spacing;
+        }
+
+        @include media($small-screen) {
+            height: $marketing-height / 2;
+
+            .inner {
+                padding-top: $marketing-spacing / 3;
+            }
+
+            hgroup {
+                margin-bottom: $marketing-spacing / 6;
+            }
+        }
+    }
+
+    // Marketing page newsletter signup
+    &.newsletter {
+        $newsletter-background-color: $gallery;
+        $newsletter-color: $heading-font-color;
+        $newsletter-height: $base-hero-height * 2 / 3;
+        $newsletter-spacing: $base-hero-spacing * 4;
+
+        @include background(linear-gradient(rgba($newsletter-background-color, 0.925),
+                            rgba($newsletter-background-color, 0.925)),
+                            url($worldphone-pattern) center repeat);
+        background-size: 10%;
+        color: $newsletter-color;
+        height: $newsletter-height;
+
+        & > .inner {
+            padding-top: $newsletter-spacing;
+            text-align: left;
+        }
+
+        h3 {
+            @include span-columns(11);
+            @include shift(1);
+        }
+
+        fieldset {
+            @include span-columns(11);
+            @include shift(1);
+            background: none;
+            border: none;
+            padding: 0;
+        }
+
+        label {
+            @include span-columns(3 of 11);
+            display: inline-block;
+            font-family: $base-font-family;
+            font-size: 1.1em;
+        }
+
+        .input-bar {
+            @include span-columns(7 of 11);
+            @include calc('margin-top', "#{$base-line-height} * 0.2em");
+        }
+
+        @include media($small-screen) {
+            height: $base-hero-height / 2;
+
+            .inner {
+                padding-top: $newsletter-spacing / 6;
+            }
+
+            h3 {
+                font-size: $big-font-size;
+            }
+
+            h3, fieldset {
+                @include span-columns(12);
+                margin-left: 0;
+            }
+
+            label, .input-bar {
+              @include span-columns(12 of 12);
+            }
+
+            .input-bar button {
+                @include border-left-radius($base-border-radius);
+                margin-top: 1em;
+                position: relative;
+                width: 100%;
+            }
+        }
+    }
+
+    // Registration page
+    &.signup {
+        $signup-background-top: rgba($base-background-color, 0);
+        $signup-background-bottom: rgba($base-background-color, 1);
+        $signup-height: $base-hero-height;
+        $signup-spacing: $base-hero-spacing * 4;
+
+        @include background(linear-gradient($signup-background-top 0%, $signup-background-top 50%, $signup-background-bottom 80%, $signup-background-bottom 100%),
+                            url($signup-image), center/cover no-repeat $signup-background-top scroll);
+
+        & > .inner {
+            padding-top: $signup-spacing;
+        }
+
+        h1 {
+            font-size: $biggest-font-size;
+        }
+
+        a:not(.button) {
+            color: $heading-font-color;
+            display: block;
+            font-family: $base-font-family;
+            font-size: $big-font-size;
+            margin-top: $signup-spacing / 2;
+            text-decoration: underline;
+        }
+
+        @include media($small-screen) {
+          height: $signup-height / 2;
+
+          .inner {
+              padding: $signup-spacing / 3 $signup-spacing / 6;
+          }
+
+          hgroup {
+              margin-bottom: $signup-spacing / 6;
+          }
+
+          a.button {
+              padding: $small-spacing;
+          }
+
+          a:not(.button) {
+              margin-top: $signup-spacing / 6;
+          }
+        }
+    }
+}
+
+.hero-chaser {
+    $chaser-background-color: $wild-sand;
+    $chaser-color: $heading-font-color;
+
+    @include fill-parent;
+    background-color: $chaser-background-color;
+    color: $chaser-color;
+
+    .inner {
+        @include flex-row;
+        @include flextra((wrap: wrap));
+    }
+
+    .chaser {
+        @include flex-child;
+        @include flextra((basis: 300px, shrink: 0));
+        padding: 3em 3em 1.5em;
+        text-align: center;
+    }
+
+    p {
+        font-family: $base-font-family;
+        padding: 0 $small-spacing;
+    }
+
+    @include media($small-screen) {
+        .chaser {
+            padding: 2em 1em 0;
+        }
+    }
+}

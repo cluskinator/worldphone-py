@@ -1,0 +1,35 @@
+
+{% extends "admin/layout.html" %}
+
+{% block body %}
+<div class="container">
+    <h3 class="page-header">Users per Country</h3>
+    <br>
+    <table class='table table-bordered datatable'>
+        <thead>
+            <tr>
+                <th>Country</th>
+                <th>Number of Total Users</th>
+                {% for role in role_names %}
+                <th> {{ role.capitalize() }} </th>
+                {% endfor %}
+            </tr>
+        </thead>
+        {% for country in country_counts %}
+        <tr>
+            <td>{{ country }}</td>
+            <td>{{ country_counts[country]['total'] }}</td>
+            {% for role in role_names %}
+            <td>{{ country_counts[country][role] }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('table.datatable').dataTable();
+    });
+</script>
+{% endblock %}

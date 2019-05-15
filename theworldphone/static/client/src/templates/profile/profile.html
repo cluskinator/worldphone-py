@@ -1,0 +1,89 @@
+<div class="inner profile">
+    <div id="user-info">
+        <hgroup class="one of-three">
+            <img ng-src="{{ profile.user.picture }}" alt="User profile pic" />
+            <h1>{{ profile.user.nickname }}</h1>
+            <h2>
+                User Profile
+                <i ng-click="profile.editing = true" class="fa fa-pencil-square-o"><span>edit profile icon</span></i>
+            </h2>
+        </hgroup>
+
+        <div id="stats" class="two of-three">
+            <ul>
+                <li>
+                    <span class="h2">Location</span>
+                    <span>
+                        <span class="flag-icon flag-icon-{{ profile.user.location | lowercase }}"><span class="sr-only">Flag of {{ profile.countries[profile.user.location] }}</span></span>
+                        {{ profile.countries[profile.user.location] }}
+                    </span>
+                </li>
+                <li>
+                    <span class="h2">Gender</span>
+                    <span>{{ profile.user.gender | titleize }}</span>
+                </li>
+                <li>
+                    <span class="h2">Email</span>
+                    <span>{{ profile.user.email }}</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="performance">
+        <div id="languages" class="three of-four">
+            <h2>Fluent</h2>
+            <!-- <languages languages="profile.user.spokenLanguages"></languages> -->
+            <ul class="languages">
+                <li ng-repeat="language in profile.user.spokenLanguages | orderBy:'name' track by language.id">{{ language.attributes.name }}</li>
+            </ul>
+
+            <h2>Learning</h2>
+            <languages languages="profile.user.learningLanguages"></languages>
+        </div>
+
+        <div id="ratings" class="one of-four">
+            <h2>Your Ratings</h2>
+            <div>
+                <ul>
+                    <ratings ng-repeat="rating in profile.user.ratings" category="{{ rating.attributes.type }}" score="{{ rating.attributes.average / 100.0 }}"></ratings>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <modal class="edit-profile" show="profile.editing" closeable="true">
+        <fieldset>
+            <h3>Change your name:</h3>
+            <div ng-init="edit.nickname = profile.user.nickname; editing.nickname = !edit.nickname" ng-show="!editing.nickname" class="selector">
+                <label ng-click="editing.nickname = true">{{ profile.user.nickname }}</label>
+            </div>
+            <div ng-show="editing.nickname" class="selector">
+                <input ng-model="edit.nickname" type="text" value="{{ edit.nickname }}"/>
+            </div>
+
+            <h3>Change your gender:</h3>
+            <div ng-init="edit.gender = profile.user.gender" class="light button-group">
+                <label ng-repeat="gender in ['male', 'female', 'other']"
+                       ng-class="{checked: (gender == edit.gender)}">
+                    <input type="radio" ng-model="edit.gender" value="{{ gender }}">
+                    <span class="button-group-item">{{ gender | titleize }}</span>
+                </label>
+            </div>
+
+            <h3>Change your country:</h3>
+            <div ng-init="edit.country = profile.user.location; editing.country = !edit.country" ng-show="!editing.country" class="selector">
+                <label ng-click="editing.country = true">{{ profile.countries[edit.country] }}</label>
+            </div>
+            <div ng-show="editing.country" ng-mouseover="showCountries = true" ng-mouseleave="showCountries = false" class="selector">
+                <input ng-model="countrySearch" type="text"/>
+                <ul ng-show="showCountries || countrySearch.length"  ng-mouseover="showCountries = true" ng-mouseleave="showCountries = false">
+                    <li ng-repeat="country in profile.countriesArray | filter:{name:countrySearch} | orderBy:'name' track by country.name"
+                        ng-click="edit.country = country.code; editing.country = false; showCountries = false;">{{ country.name }}</li>
+                </ul>
+            </div>
+
+            <button ng-click="profile.updateUser(edit)" class="btn big-btn">Submit</button>
+        </fieldset>
+    </modal>
+</div>

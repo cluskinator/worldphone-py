@@ -1,0 +1,173 @@
+<script>
+  var TogetherJSConfig_findRoom = "{{room_id}}";
+  var TogetherJSConfig_dontShowClicks = true;
+  var TogetherJSConfig_ignoreForms = true;
+  var TogetherJSConfig_disableSessionLoad = true;
+</script>
+<script src="http://tjs.theworldphone.com/togetherjs-min.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/whiteboard.js') }}"></script>
+
+<script>
+    var session = null;
+    Twilio.Device.setup("{{ token }}");
+
+    Twilio.Device.error(function (error) {
+        $("#blurb").text("Error: " + error.message);
+        $("#hangup_button").prop("disabled", true);
+        $("#home_button").removeClass('hidden');
+        session.close();
+    });
+
+    Twilio.Device.connect(function (conn) {
+        $("#sketch-panel").removeClass('hidden');
+        $("#blurb").text("Say hello to {{partner.name}}!");
+        $("#hangup_button").removeClass('hidden');
+
+        if (call_type == 1) {
+          var topics = {{ topics|safe }};
+          var topic = {{ topic }};
+          items = topics[topic_lang];
+          $('#topic').append('&nbsp;');
+          $topic = $('#topic');
+          $topic.slideDown();
+
+          $topic.text( decodeURIComponent(escape(items['{{topic}}'])) );
+        }
+
+        whiteboard();
+        TogetherJS(this);
+        TogetherJS.on("ready", function(){
+          session = TogetherJS.require('session');
+        });
+        TogetherJS.reinitialize();
+
+    });
+
+    Twilio.Device.disconnect(function (conn) {
+        $("#blurb").text("We hope you enjoyed your call!");
+        $("#hangup_button").prop("disabled", true);
+        $("#home_button").removeClass('hidden');
+        $("#sketch-panel").addClass('hidden');
+        $("input.rating").rating('refresh', { min:0, max:5, step:0.5, size:'xs', showClear:false, showCaption:false});
+        $('select.multiselect').multiselect('refresh');
+        $("#ratingContainer").removeClass('hidden');
+
+        session.close();
+
+        if (conn.parameters.CallSid) {
+          var data = {'call_sid': conn.parameters.CallSid, 'caller_id': '{{current_user.id}}',
+              'caller_username': '{{current_user.name}}', 'callee_id': '{{partner.id}}',
+              'callee_username': '{{partner.name}}', 'call_type': call_type, 'lang1': lang1, 'lang2': lang2,
+              'ips': ["{{ips[0]}}", "{{ips[1]}}"], 'locs': ["{{locs[0]}}", "{{locs[1]}}"], 'room_id': '{{ room_id }}'  }
+          $.ajax({
+              url: "{{ url_for('call.save') }}",
+              data: JSON.stringify(data),
+              contentType: 'application/json',
+              type: 'POST'
+          })
+        }
+        else if (conn.parameters.CallSid) {
+          var data = {'caller_id': '{{current_user.id}}', 'callee_id': '{{partner.id}}',
+              'locs': '{{locs}}[0]'}
+
+          $.ajax({
+              url: "{{ url_for('call.save') }}",
+              data: JSON.stringify(data),
+              contentType: 'application/json',
+              type: 'POST',
+          });
+        }
+    });
+
+    function call(data) {
+        // get the phone number or client to connect the call to
+        params = {"PhoneNumber": '{{partner.name}}', "From": '{{current_user.id}}'};
+        Twilio.Device.connect(params);
+    }
+
+    function hangup() {
+        Twilio.Device.disconnectAll();
+    }
+
+
+  /* Rate Partner
+     - package the rating data and partner ID
+     - POST to the user rating endpoint
+     - Hide when complete
+  */
+  $(document).on('click', '#rate_caller', function () {
+      var _data = {};
+      $('input.rating').each( function() {
+          _data[$(this).attr('name')] = $(this).val();
+      });
+      var data = {
+        '_data': _data,
+        '_id': '{{ partner.id }}'
+      };
+      $.ajax({
+          url: "{{ url_for('user.rate') }}",
+          data: JSON.stringify(data),
+          contentType: 'application/json',
+          async: false,
+          type: 'POST',
+          success: function(data) {
+              var text = '<strong>Thank you for rating your partner! Your input is what makes The Worldphone work!</strong>';
+              $('.rate-hide').addClass('hidden');
+              $('#rate-call-feedback').removeClass('hidden');
+              $('#rate-call-feedback .panel-body').html(text);
+          }
+      });
+      return false;
+  });
+
+  /* Report Caller
+     -
+     - POST to the calls.flag endpoint
+  */
+  $(document).on('click', '#report_caller', function () {
+
+      var _data = {};
+      _data['room_id'] = '{{ room_id }}'
+      _data['reporter_id'] = '{{ current_user.id }}'
+      _data['reported_id'] = '{{ partner.id }}'
+      _data['reported_name'] = '{{ partner.name }}'
+      _data['comment'] = $("[name='flag-comments']").val();
+      _data['flags'] = $("[name='flag-type']").val();
+
+      var data = {
+        '_data': _data,
+      };
+      $.ajax({
+          url: "{{ url_for('call.flag') }}",
+          data: JSON.stringify(data),
+          contentType: 'application/json',
+          async: false,
+          type: 'POST',
+          success: function(data) {
+              $('#collapseOne .panel-body').html('<strong>Thank you, a report has been sent.</strong>');
+          }
+      });
+      return false;
+  });
+
+</script>
+
+<br>
+<h3 id="blurb">HEY. You started a call. You're going to talk to {{partner.name}}.</h3>
+<br><br>
+
+<button id="hangup_button" class="btn btn-danger hidden" onclick="hangup();">
+    Hangup
+</button>
+
+<a id="home_button" class="btn btn-warning hidden" href="{{ url_for('user.index') }}">
+    Make a new call!
+</a>
+
+<br><br>
+
+<div id="ratingContainer" class="hidden">
+  <div class="col-lg-12 well" style="margin-bottom:80px;">
+      {% include 'call/partials/rate_call.html' %}
+  </div>
+</div>

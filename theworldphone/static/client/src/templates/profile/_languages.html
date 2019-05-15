@@ -1,0 +1,18 @@
+<div ng-init="addingLanguage = false">
+    <ul class="languages">
+        <li ng-repeat="language in languages | orderBy:'name' track by language.id"
+            ng-click="languages = profile.removeLanguage(language, languages)">{{ language.attributes.name }}</li>
+        <i ng-click="addingLanguage = !addingLanguage" ng-class="{'fa fa-plus-circle': !addingLanguage, 'fa fa-times-circle stop': addingLanguage}">
+            <span>{{ !addingLanguage ? 'add' : 'close'}} icon</span>
+        </i>
+    </ul>
+
+    <div ng-show="addingLanguage" ng-mouseover="showList = true" ng-mouseleave="showList = false" class="selector">
+        <input ng-model="languageSearch" type="text"/>
+        <ul ng-show="showList || languageSearch.length"  ng-mouseover="showList = true" ng-mouseleave="showList = false">
+            <li ng-repeat="language in profile.availableLanguages(languages) | filter:{attributes:{name:languageSearch}} | orderBy:'attributes.name' track by language.id"
+                ng-click="profile.addLanguage(language, languages)">{{ language.attributes.name }}</li>
+        </ul>
+        <i ng-click="profile.addLanguageByName(languageSearch, languages)" class="fa fa-plus-circle go"><span>add icon</span></i>
+    </div>
+</div>

@@ -1,0 +1,16 @@
+@import "../neat/neat-helpers";
+
+// Neat Overrides
+// $column: 90px;
+// $gutter: 30px;
+// $grid-columns: 12;
+// $max-width: 1200px;
+
+// Neat Breakpoints
+$medium-screen-size: 690px; // ~ 6 col
+$large-screen-size: 930px;  // ~ 8 col
+
+$small-screen: new-breakpoint(max-width $medium-screen-size);
+$medium-screen: new-breakpoint(max-width $large-screen-size);
+$medium-screen-and-up: new-breakpoint(min-width $medium-screen-size);
+$large-screen: new-breakpoint(min-width $large-screen-size);

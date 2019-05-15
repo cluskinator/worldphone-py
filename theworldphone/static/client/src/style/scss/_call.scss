@@ -1,0 +1,310 @@
+#twp-call {
+    background-color: $violet;
+    video {
+        object-fit: cover !important; // Ugh.
+        position: absolute !important; // Double ugh.
+    }
+}
+
+////////// Call
+
+$menu-background-color: $lighter-gray;
+
+#call {
+    @include flex-child(null);
+    @include flex-column;
+    box-sizing: content-box;
+    overflow: hidden;
+}
+
+#twp-call {
+    @include flex-child;
+    @include flex-column;
+    position: relative;
+
+    #call-window, & #remote-media, & #remote-media video {
+        @include fill-parent;
+        @include flex-child;
+        @include position(absolute, 0 0 0 0);
+        @include size(100%);
+    }
+
+    #call-mirror {
+        $mirror-width: 25%;
+
+        @include position(absolute, 0 0 null null);
+        height: $mirror-width * 0.8;
+        width: $mirror-width;
+
+        #local-media, #local-media video {
+            @include size(100%);
+        }
+    }
+}
+
+.call-menu {
+    $menu-background-color-active: lighten($menu-background-color, 5%);
+    $menu-border-color: $light-gray;
+    $menu-border: 1px solid $menu-border-color;
+    $menu-box-shadow-blur: 30px;
+    $menu-box-shadow-color: darken($menu-background-color, 10%);
+    $menu-box-shadow-offset: 12px;
+    $menu-height: 4em;
+
+    $over-menu-spacing: (-$base-font-size * 3);
+    $section-box-shadow: $menu-box-shadow-offset 0 15px -4px $menu-box-shadow-color,
+                        -$menu-box-shadow-offset 0 15px -4px $menu-box-shadow-color;
+
+    position: relative;
+
+    #call-menu-toggle {
+        position: absolute;
+        top: $over-menu-spacing;
+        @include calc('left', "50% - #{$base-font-size}");
+        @include size($base-font-size * 2);
+        background-color: $menu-background-color;
+        border: $base-border;
+        border-radius: 50%;
+        color: $base-font-color;
+        cursor: pointer;
+        display: block;
+        float: left;
+        text-align: center;
+
+        i.fa {
+            font-size: $bigger-font-size;
+            margin: 0 auto;
+
+            &.fa-sort-up {
+                margin-top: 0.27em;
+            }
+
+            &.fa-sort-down {
+                margin-top: -0.07em;
+            }
+        }
+    }
+
+    #end-call {
+        $end-call-size: 2.5em;
+        $end-call-spacing: $small-spacing;
+
+        @include background(url('../assets/img/icons/endcall_icon.png') center no-repeat, $red);
+        @include position(absolute, $over-menu-spacing * 2 $end-call-spacing null null);
+        @include size($end-call-size);
+        background-size: 60%;
+        border-radius: 50%;
+        cursor: pointer;
+        display: block;
+        padding: $end-call-size / 2;
+    }
+
+    ul.section-details {
+        @include columns(4);
+        background-color: $menu-background-color-active;
+        border-top: $menu-border;
+        display: block;
+        font-size: $big-font-size;
+        padding: $small-spacing 0;
+        text-align: center;
+        width: 100%;
+        z-index: 1001;
+
+        li {
+          padding: $smaller-spacing;
+        }
+    }
+
+    footer {
+        @include fill-parent;
+        @include flex-row;
+        @include transition(all 0.15s linear);
+        background-color: $menu-background-color;
+        margin: 0 auto;
+        vertical-align: baseline;
+
+        &.open {
+            height: $menu-height * 2; // Expanded
+        }
+        &:not(.open) {
+            height: $menu-height;     // Not expanded
+        }
+
+        section {
+            @include flex-child;
+            border-top: $menu-border;
+            border-right: $menu-border;
+            margin: 0;
+            padding: 1em 0;
+            position: relative;
+            width: 25%;
+
+            &:last-of-type {
+                border-right: none;
+            }
+
+            &.active { //, &:hover {
+                @include prefixer(box-shadow, $section-box-shadow, webkit moz spec);
+                background-color: $menu-background-color-active;
+                border-top: 0;
+                z-index: 1000;
+
+                h2 {
+                  @include calc('margin-top', "#{$menu-height} - 1em"); // center vertically
+                }
+            }
+
+            a {
+                display: inline-block;
+            }
+
+            h2 {
+                margin-top: $smaller-spacing;
+            }
+
+            ul.preview {
+                $preview-font-size: $big-font-size;
+
+                display: block;
+                font-size: $preview-font-size;
+                overflow: hidden;
+
+                &:after {
+                    // Line clamping
+                    @include background(linear-gradient(to bottom, rgba($menu-background-color, 0.25),
+                                                                   rgba($menu-background-color, 1) 50%));
+                    content: "";
+                    height: $preview-font-size * $base-line-height;
+                    position: absolute;
+                    bottom: 0;
+                    right: 0;
+                    text-align: center;
+                    width: 100%;
+                }
+            }
+        }
+    }
+}
+
+////////// Post-Call
+
+.survey .modal-container {
+    top: calc(35vh);
+
+    hgroup.alt {
+        @include calc('margin-top', "12.5vh - (2em + #{$small-spacing})");
+        margin-bottom: 0;
+
+        h1 {
+            font-family: $secondary-font-family;
+            font-size: $bigger-font-size;
+            font-weight: bold;
+            margin-bottom: $small-spacing;
+        }
+
+        h2 {
+            font-size: $bigger-font-size;
+        }
+
+        h3 {
+            font-family: $heading-font-family;
+            font-size: $bigger-font-size;
+        }
+
+        h1, h3 {
+            margin-top: -5vh;
+        }
+
+        &:not(:first-of-type) {
+            margin-top: $base-spacing;
+
+            h2 {
+                font-family: $secondary-font-family;
+                font-weight: bold;
+                margin-top: 0;
+            }
+        }
+    }
+
+    .rate {
+        margin: $small-spacing * 2 auto 0;
+    }
+
+    i.fa {
+        font-size: $big-font-size;
+    }
+
+    .split {
+        @include span-columns(12);
+
+        & > *:first-child {
+            @include span-columns(3 of 12);
+        }
+
+        & > *:last-child {
+            @include span-columns(9 of 12);
+        }
+
+        select, input {
+            font-size: $base-font-size;
+            height: 1em;
+        }
+        select {
+            baseline: center;
+            padding: $small-spacing;
+            width: 80%;
+        }
+        input {
+          @include calc('padding', "#{$small-spacing} + 0.5em");
+          color: $base-font-color;
+          margin-top: 1px; // 1px diff between borders
+        }
+    }
+
+    .button {
+        @include button-color($gallery, $periwinkle);
+        font-family: $secondary-font-family;
+        font-weight: bold;
+        margin-top: $small-spacing;
+
+        &:hover, &:focus {
+            background-color: shade($gallery, 10%);
+            color: shade($periwinkle, 10%);
+        }
+    }
+}
+
+
+////////// supercoolspinner (codepen.io/msisto/pen/LntJe)
+
+// Variables
+$spinner-color:      #ffffff;
+$spinner-size:       30px;
+$spinner-speed:      1.5s;
+$spinner-thickness:  8px;
+
+// Animation keyframes
+@mixin rotate-forever {
+    0%    { @include transform(rotate(0deg)); }
+    100%  { @include transform(rotate(360deg)); }
+}
+@-webkit-keyframes rotate-forever { @include rotate-forever; }
+   @-moz-keyframes rotate-forever { @include rotate-forever; }
+        @keyframes rotate-forever { @include rotate-forever; }
+
+
+// Spinner
+.spinner {
+    @include animation-duration($spinner-speed);
+    @include animation-iteration-count(infinite);
+    @include animation-name(rotate-forever);
+    @include animation-timing-function(linear);
+    @include position(absolute, 50% 0 0 50%);
+    @include size($spinner-size);
+    border: $spinner-thickness solid $spinner-color;
+    border-right-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    float: left;
+    margin: -$spinner-size/2 0 0 -$spinner-size/2;
+}

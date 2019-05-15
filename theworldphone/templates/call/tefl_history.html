@@ -1,0 +1,53 @@
+{% set page_title = user.name %}
+{% extends "layouts/base.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/9dcbecd42ad/integration/bootstrap/3/dataTables.bootstrap.css"><!--datatables-->
+{% endblock %}
+
+{% block css_style %}
+<style type="text/css">
+  body {
+    background-color: #fff;
+  }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h3 class="page-header">TEFL Call History</h3>
+    <table class='table table-bordered datatable'>
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Caller 1</th>
+                <th>Caller 2</th>
+                <th>Started</th>
+                <th>Duration</th>
+            </tr>
+        </thead>
+        {% for call in calls %}
+        <tr>
+            <td>{{ t[call.call_type] }}</td>
+            <td>{{ call.status }}</td>
+            <td>{{ call.caller_username }}</td>
+            <td>{{ call.callee_username }}</td>
+            <td>{{ call.start_time }}</td>
+            <td>{{ '%0.2f'| format(call.recording_duration / 60) }} minutes</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}
+
+
+{% block extra_js %}
+<script src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script><!--datatables-->
+<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/plug-ins/9dcbecd42ad/integration/bootstrap/3/dataTables.bootstrap.js"></script><!--datatables-->
+<script>
+$(document).ready(function() {
+    $('table.datatable').dataTable();
+});
+</script>
+{% endblock %}

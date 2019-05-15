@@ -1,0 +1,145 @@
+
+{% extends "admin/layout.html" %}
+
+{% block body %}
+
+<style>
+    i.ban-btn {
+        cursor: pointer;
+    }
+</style>
+
+<!-- functionality moved to calls page -->
+
+<div class="container">
+    <h3 class="page-header">Flagged Calls</h3>
+    <table class='table table-bordered datatable'>
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Language(s)</th>
+                <th>Caller 1</th>
+                <th>Caller 2</th>
+                <th>Started</th>
+                <th>Duration</th>
+                <th>Recording</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for call in calls %}
+        <tr id="{{ call.uid }}">
+            <td>{{ call.call_type.capitalize() }}</td>
+            <td>
+              {% if call.language2 %}
+                {{ call.language1.name }}, {{ call.language2.name }}
+              {% elif call.language1 %}
+                {{ call.language1.name }}
+              {% else %}
+                N/A
+              {% endif %}
+            </td>
+
+            <td>
+              <a href="{{ url_for('admin.user', user_uid=call.caller_uid) }}">
+                {{ call.caller_username }}
+              </a>
+              <span class="glyphicon glyphicon-globe" data-toggle="tooltip" data-placement="bottom" title="{{ call.caller_ip }}"></span>
+            </td>
+
+            <td>
+              <a href="{{ url_for('admin.user', user_uid=call.callee_uid) }}">
+                {{ call.callee_username }}
+              </a>
+              <span class="glyphicon glyphicon-globe" data-toggle="tooltip" data-placement="bottom" title="{{ call.callee_ip }}"></span>
+            </td>
+
+            <td>{{ call.start_time }}</td>
+            <td>{{ call.duration or 'N/A' }}</td>
+            <td>
+              Recordings are not currently supported.
+              <!-- <audio controls>
+                <source src="{{ call.recording_url }}" type="audio/mpeg">
+                Your browser does not support the audio element.
+              </audio> -->
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="detail-modal" tabindex="-1" role="dialog" aria-labelledby="detail-modal-label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content"></div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    $('table.datatable').dataTable();
+
+    $('td a').click(function(event){
+        event.stopPropagation();
+    });
+
+    $('table.datatable tbody').on('click', 'tr', function () {
+        var data = this.id;
+        $.ajax({
+            url: "{{ url_for('admin.get_call_details') }}",
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            type: 'POST',
+            success: function (result) {
+                $('.modal-content').html(result.html);
+                $('#detail-modal').modal();
+            }
+        });
+        $(this).toggleClass('active');
+    });
+
+
+    $('#detail-modal').on('hidden.bs.modal', function () {
+        var rows = $("table.datatable").dataTable().fnGetNodes();
+        for(var i=0; i < rows.length; i++)
+            $(rows[i]).removeClass('active')
+    });
+
+     $(document).on({
+        mouseenter: function(){
+          $(this).find('i.ban-btn').fadeIn();
+        },
+        mouseleave: function(){
+          $(this).find('i.ban-btn').fadeOut();
+        }
+      }, 'td.violator');
+
+
+    $(document).on('click', 'i.ban-btn', function(){
+        var _this = $(this);
+        if (window.confirm("Are you sure you want to ban this user?")) {
+            _this.show().removeClass('fa-times-circle').addClass('fa-circle-o-notch fa-spin');
+            var uid = $(this).data('user');
+            var data = {'uids': uid}
+            $.ajax({
+                url: "{{ url_for('admin.ban_user') }}",
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                async: false,
+                cache: false,
+                type: 'POST',
+                success: function (result) {
+                    _this.removeClass('fa-circle-o-notch fa-spin ban-btn').addClass('fa-lock');
+                }
+            });
+        }
+    });
+
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+
+});
+</script>
+
+{% endblock %}

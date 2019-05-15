@@ -1,0 +1,97 @@
+<div id="call">
+    <div id="twp-call">
+        <div class="spinner"></div>
+        <div id="call-window"><div id="remote-media"></div></div>
+        <div id="call-mirror">
+            <div id="local-media"></div>
+            <!-- <div id="controls">
+                <div id="preview">
+                    <button id="button-preview">Preview My Camera</button>
+                </div>
+            </div> -->
+        </div>
+    </div>
+
+    <div class="call-menu">
+        <span ng-hide="call.sectionActive" ng-click="call.toggleMenu()" id="call-menu-toggle">
+            <i class="fa" ng-class="{ 'fa-sort-down': call.menuOpened(), 'fa-sort-up': !call.menuOpened() }">
+                <span>menu toggle icon</span>
+            </i>
+        </span>
+
+        <label ng-click="call.endCall()" for="survey-modal-trigger" id="end-call">
+            <span class="sr-only">End call button</span>
+        </label>
+
+        <ul class="section-details" ng-show="call.sectionActive">
+            <li ng-repeat="activeDetail in call.activeSectionDetails track by $index" ng-bind="activeDetail"></li>
+        </ul>
+        <footer ng-class="{ 'open': call.menuOpened() }" ng-mouseover="call.menuHovered = true" ng-mouseleave="call.menuHovered = false">
+            <section ng-hide="call.activeConversation">Waiting for call partner...</section>
+            <section ng-repeat="(section, details) in call.menu track by $index" ng-click="call.toggleMenuDetails(section)" ng-class="{ 'active': call.isActive(section) }" class="{{ section }}">
+                <h2><img class="icon" ng-src="assets/img/icons/{{ section }}_icon.png" alt="{{ section }} icon" /> {{ section | titleize }}</h2>
+                <ul ng-show="(call.menuOpened() && !call.isActive(section))" class="preview">
+                    <li ng-repeat="detail in details track by $index" ng-bind="detail"></li>
+                </ul>
+            </section>
+        </footer>
+    </div>
+
+    <!-- Post-call survey -->
+    <modal class="survey" ng-init="showSurvey = false" show="showSurvey" closeable="false" height="30vh" width="60%">
+        <div ng-show="!survey.responses['quality']['value']">
+            <hgroup class="alt">
+                <h1>great call. how was the other user?</h1>
+
+                <h2>how was the call quality? was the audio and video quality good?</h2>
+            </hgroup>
+            <rating category="quality" rating="survey.responses['quality']" icon="{{ call.ratingIcons['overall'] }}"></rating>
+        </div>
+
+        <div ng-show="survey.responses['quality']['value'] && !survey.responses['overall']['value']">
+          <hgroup class="alt">
+              <h2>how was the user’s overall speaking ability?</h2>
+          </hgroup>
+          <rating category="overall" rating="survey.responses['overall']" icon="{{ call.ratingIcons['overall'] }}"></rating>
+        </div>
+
+        <div ng-show="survey.responses['overall']['value'] && !survey.responses['grammar']['value']">
+            <hgroup class="alt">
+                <h2>how was the user’s grammar?</h2>
+            </hgroup>
+            <rating category="grammar" rating="survey.responses['grammar']" icon="{{ call.ratingIcons['grammar'] }}"></rating>
+        </div>
+
+        <div ng-show="survey.responses['grammar']['value'] && !survey.responses['vocabulary']['value']">
+            <hgroup class="alt">
+                <h2>how was the user’s vocabulary?</h2>
+            </hgroup>
+            <rating category="vocabulary" rating="survey.responses['vocabulary']" icon="{{ call.ratingIcons['vocabulary'] }}"></rating>
+        </div>
+
+        <div ng-show="survey.responses['vocabulary']['value'] && !survey.responses['accent']['value']">
+            <hgroup class="alt">
+                <h2>how was the user’s accent?</h2>
+            </hgroup>
+            <rating category="accent" rating="survey.responses['accent']" icon="{{ call.ratingIcons['accent'] }}"></rating>
+        </div>
+
+        <div ng-show="survey.responses['accent']['value']">
+            <hgroup class="alt">
+                <h3>report inappropriate behavior:</h3>
+                <div class="split">
+                    <div class="left">
+                        <select ng-model="survey.responses['flag']" name="flag" id="flag">
+                            <option></option>
+                            <option ng-repeat="flag in ['verbal', 'sexual', 'other']">{{ flag | titleize }}</option>
+                        </select>
+                    </div>
+                    <input ng-model="survey.responses['comment']" class="right" type="text" placeholder="Comment on inappropriate behavior..." />
+                </div>
+
+                <h2>click the button below to make another call.</h2>
+            </hgroup>
+            <a ng-click="call.submitSurvey(survey.responses)" class="big button">Awesome.</a>
+        </div>
+    </modal>
+</div>

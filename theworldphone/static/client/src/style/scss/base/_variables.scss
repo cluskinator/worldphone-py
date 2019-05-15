@@ -1,0 +1,82 @@
+////////// Assets
+
+// TWP Assets
+$worldphone-logo: '../assets/img/wp_logo.png';
+$worldphone-pattern: '../assets/img/worldphone_pattern.png';
+
+////////// Colors, etc.
+
+// TWP Colors
+$aqua: #91E2ED;
+$fern: #81C979;
+$midnight: #003285;
+$periwinkle: lighten($midnight, 45%);
+$purple: #7643BB;
+$violet: #3F3B5F;
+
+$gallery: #EEE;
+$wild-sand: #F4F4F4;
+$red: tint(#F00, 35%);
+
+// Base Colors
+$darker-gray: #333;
+$dark-gray: #555;
+$medium-gray: #777;
+$light-gray: #999;
+$lighter-gray: #ddd;
+
+// Font Colors
+$base-font-color: $medium-gray;
+$heading-font-color: $dark-gray;
+$light-font-color: $light-gray;
+$light-heading-color: $wild-sand;
+$action-color: $periwinkle;
+$logo-color: $aqua;
+
+////////// Typography
+
+// Font Families
+$base-font-family: $avenir;
+$heading-font-family: $base-font-family;
+$secondary-heading-font-family: $varela-round;
+$secondary-font-family: $karla;
+
+// Font Sizes
+$base-font-size: 1em;
+$big-font-size: 1.25em;
+$bigger-font-size: 1.75em;
+$biggest-font-size: 2em;
+$giant-font-size: 3.5em;
+$small-font-size: 0.9em;
+
+// Line Height
+$base-line-height: 1.5;
+$heading-line-height: 1.2;
+
+////////// Other
+
+// Spacing
+$base-spacing: $base-line-height * 2em;
+$small-spacing: $base-spacing / 3;
+$smaller-spacing: $small-spacing / 4;
+
+// Borders
+$base-border-color: $lighter-gray;
+$base-border: 1px solid $base-border-color;
+$base-border-radius: 6px;
+
+// Background Colors
+$base-background-color: $wild-sand;
+$secondary-background-color: tint($base-border-color, 75%);
+
+// Forms
+$form-box-shadow: inset 0 1px 3px rgba(#000, 0.06);
+$form-box-shadow-focus: $form-box-shadow, 0 0 5px adjust-color($action-color, $lightness: -5%, $alpha: -0.3);
+
+// Other Sizes
+$base-z-index: 0;
+$navigation-height: 80px;
+
+// Animations
+$base-duration: 150ms;
+$base-timing: ease;

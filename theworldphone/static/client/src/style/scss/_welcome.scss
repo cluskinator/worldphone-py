@@ -1,0 +1,47 @@
+////////// Onboard modal
+
+.welcome .onboard.modal .modal-container {
+    margin-top: $small-spacing;
+
+    hgroup {
+        margin-bottom: $small-spacing;
+
+        h1 {
+            margin-bottom: $smaller-spacing;
+        }
+    }
+
+    fieldset {
+        margin-bottom: 0;
+
+        &:last-of-type h3 {
+            margin-top: $base-spacing;
+        }
+
+        @include media($medium-screen) {
+            &, &:last-of-type {
+                h3:first-child {
+                    margin-top: 0;
+                }
+            }
+        }
+    }
+
+    .selector {
+        margin-bottom: $base-spacing;
+    }
+
+    button.btn {
+        margin: $small-spacing auto;
+
+        @include media($large-screen) {
+            margin-top: -$small-spacing;
+        }
+    }
+
+    div > span {
+        display: block;
+        text-align: center;
+    }
+
+}

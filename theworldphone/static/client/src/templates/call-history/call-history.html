@@ -1,0 +1,38 @@
+<div class="inner call-history">
+    <div id="user-info">
+      <hgroup>
+          <img ng-src="{{ callHistory.user.picture }}" alt="User profile pic" />
+          <h1>Call History</h1>
+          <h2>{{ callHistory.user.nickname }}</h2>
+      </hgroup>
+    </div>
+
+    <form class="search-bar" role="search">
+        <input ng-model="callSearch" type="search" placeholder="Search" />
+        <i class="fa fa-search"><span>search icon</span></i>
+    </form>
+
+    <table class="minimal responsive">
+        <thead>
+            <tr>
+                <th class="h2">Partner</th>
+                <th class="h2">Languages</th>
+                <th class="h2">Time</th>
+                <th class="h2">Length</th>
+                <th class="h2">Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-hide="callHistory.callList.length">
+                <td colspan="5">No calls to display.</td>
+            </tr>
+            <tr ng-repeat="call in callHistory.callList | orderBy:'start_time':true | filter:callSearch">
+                <td data-th="Partner">{{ call.partner_username }}</td>
+                <td data-th="Lang(s)">{{ call.language2 && call.language2 != call.language1 ? (call.language1 + ', ' + call.language2) : call.language1 }}</td>
+                <td data-th="Time">{{ call.start_time | date:'short' }}</td>
+                <td data-th="Length">{{ call.duration || 'N/A' }}</td>
+                <td data-th="Type">{{ call.call_type | titleize }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

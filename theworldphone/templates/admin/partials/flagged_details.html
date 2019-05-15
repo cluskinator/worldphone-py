@@ -1,0 +1,96 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="detail-modal-label">
+            {{ call.call_type.capitalize() }} call at {{ call.start_time }}
+        </h4>
+</div>
+
+<div class="modal-body">
+
+    <form class="form-horizontal" role="form">
+
+      <legend>Call Details</legend>
+
+      <div class="form-group">
+        <label class="col-sm-2">Call Type</label>
+        <div class="col-sm-10">
+            <label class="pull-right"><strong>{{ call.call_type.capitalize() }}</strong></label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-2">Language(s)</label>
+        <div class="col-sm-10">
+            {% if call.language1 and call.language2 %}
+                <label class="pull-right"><strong>{{ call.language1.name }}, {{ call.language2.name }}</strong></label>
+            {% elif call.language1 %}
+                <label class="pull-right"><strong>{{ call.language1.name }}</strong></label>
+            {% else %}
+                <label class="pull-right"><strong>N/A</strong></label>
+            {% endif %}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-12">Call Recording</label>
+        <div class="col-sm-12">
+            Recordings are not currently supported.
+            <!-- <audio controls style="width:100%;">
+                <source src="{{ call.recording_url }}" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio> -->
+        </div>
+      </div>
+
+      <hr>
+      <legend>Reported Abuse</legend>
+
+      <table class="table table-bordered">
+        <thead>
+            <tr>
+              <th>#</th>
+              <th>Type</th>
+              <th>Reporter</th>
+              <th>Violator</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for commenter in call.comments.keys() %}
+            <tr>
+                <td rowspan="2">{{ loop.index }}</td>
+                <td><span class="text-danger">{{ call.comments[commenter][1] }} Abuse</span>
+                <!-- <td><span class="text-danger">
+                    {# for abuse in call.comments[commenter][1] #}
+                    {# abuse.capitalize() #}{# if not loop.last #}, {# endif #}
+                    {# endfor #}Abuse</span> -->
+                </td>
+                <td>
+                {% if commenter == call.caller_uid %}
+                    {{ call.caller_username }}
+                {% else %}
+                    {{ call.callee_username }}
+                {% endif %}
+                </td>
+                <td class="violator">
+                {% if commenter != call.caller_uid %}
+                    {{ call.caller_username }}
+                    {% set _uid = call.caller_uid %}
+                    {% set _status = caller_status %}
+                {% else %}
+                    {{ call.callee_username }}
+                    {% set _uid = call.callee_uid %}
+                    {% set _status = callee_status %}
+                {% endif %}
+                {% set icon_classes = 'fa-lock' if _status == 'banned' else 'fa-times-circle ban-btn' %}
+                <i data-user="{{ _uid }}" class="fa {{ icon_classes }} text-danger pull-right"></i>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">{{ call.comments[commenter][0] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+
+    </form>
+</div>

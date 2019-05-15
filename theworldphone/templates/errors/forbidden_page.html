@@ -1,0 +1,21 @@
+
+{% extends 'errors/layout.html' %}
+
+{% set page_title = _('403 - Forbidden Page') %}
+
+{% block body %}
+<div class="container">
+<div class="row">
+  <div class="col-sm-12">
+
+    <div class="page-header">
+      <h1>{{ _('Forbidden Page') }} <small>403</small></h1>
+    </div>
+
+      <p>You may not be authorized to visit this page.</p>
+      <p>Please <a href="{{ url_for('admin.login') }}">log in</a> and try again.</p>
+
+  </div>
+</div>
+</div>
+{% endblock %}

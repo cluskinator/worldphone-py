@@ -1,0 +1,57 @@
+@charset "UTF-8";
+
+@include font-face("Avenir", "../assets/fonts/avenir/AvenirLT-Medium", $file-formats: ttf);
+@include font-face("Karla", "../assets/fonts/karla/Karla-Regular", $file-formats: ttf);
+@include font-face("Karla-Bold", "../assets/fonts/karla/Karla-Bold", $file-formats: ttf);
+@include font-face("Karla-BoldItalic", "../assets/fonts/karla/Karla-BoldItalic", $file-formats: ttf);
+@include font-face("Karla-Italic", "../assets/fonts/karla/Karla-Italic", $file-formats: ttf);
+@include font-face("VarelaRound", "../assets/fonts/varela-round/VarelaRound-Regular", $file-formats: otf woff);
+
+/// Avenir font stack.
+///
+/// @type List
+
+$avenir: "Avenir", sans-serif;
+
+/// Georgia font stack.
+///
+/// @type List
+
+$georgia: "Georgia", "Cambria", "Times New Roman", "Times", serif;
+
+/// Helvetica font stack.
+///
+/// @type List
+
+$helvetica: "Helvetica Neue", "Helvetica", "Roboto", "Arial", sans-serif;
+
+/// Karla font stack.
+///
+/// @type List
+
+$karla: "Karla", sans-serif;
+
+/// Lucida Grande font stack.
+///
+/// @type List
+
+$lucida-grande: "Lucida Grande", "Tahoma", "Verdana", "Arial", sans-serif;
+
+/// Monospace font stack.
+///
+/// @type List
+
+$monospace: "Bitstream Vera Sans Mono", "Consolas", "Courier", monospace;
+
+/// Varela Round font stack.
+///
+/// @type List
+// $varela-round: "Varela Round", sans-serif;
+
+$varela-round: "VarelaRound", sans-serif;
+
+/// Verdana font stack.
+///
+/// @type List
+
+$verdana: "Verdana", "Geneva", sans-serif;

@@ -1,0 +1,172 @@
+
+{% from "macros/_form.html" import render_field, render_checkbox %}
+
+{% set page_title = 'Sign Up' %}
+
+{% extends "frontend/layout.html" %}
+
+{% block body %}
+<div class="row">
+  <h3>&nbsp;</h3>
+    <div class="col-sm-6 col-sm-offset-3 col-md-8 col-md-offset-2">
+
+      <div class="panel panel-default">
+          <div class="panel-heading">
+              <h1 class="panel-title">{{_('Sign Up')}}</h1>
+          </div><!-- /.panel-title -->
+
+          <div class="panel-body">
+
+            <form method="POST" id="signup-form">
+
+              <div class="col-md-6">
+                {{ form.csrf_token }}
+                {{ render_field(form.name, class="form-control", placeholder="username") }}
+                {{ render_field(form.email, class="form-control", placeholder="email") }}
+              </div>
+
+              <div class="col-md-6">
+                <div id="country-typeahead">
+                  {{ render_field(form.location, class="typeahead form-control", placeholder="Where are you from?") }}
+                </div>
+                <span class="hidden">{{ render_checkbox(form.agree) }}</span>
+              </div>
+
+              <div class="col-md-12">
+                <button type="submit" id="submit" class="btn btn-lg btn-info btn-block">{{_('Register')}}</button>
+              </div>
+
+            </form>
+          </div>
+          <div class="panel-footer panel-default text-right">
+              <a href="{{ url_for('admin.login') }}">{{_('Already Registered?')}}</a>
+          </div>
+      </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block css_style %}
+<style type="text/css">
+  body:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: url('static/common-files/img/overlay.png');
+    opacity: 0.5;
+  }
+
+  body {
+    background-image: url("/static/img/bg/logout.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+  }
+  span.twitter-typeahead .tt-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    list-style: none;
+    font-size: 14px;
+    text-align: left;
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    background-clip: padding-box;
+  }
+  span.twitter-typeahead .tt-suggestion > p {
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: normal;
+    line-height: 1.42857143;
+    color: #333333;
+    white-space: nowrap;
+  }
+  span.twitter-typeahead .tt-suggestion > p:hover,
+  span.twitter-typeahead .tt-suggestion > p:focus {
+    color: #ffffff;
+    text-decoration: none;
+    outline: 0;
+    background-color: #428bca;
+  }
+  span.twitter-typeahead .tt-suggestion.tt-cursor {
+    color: #ffffff;
+    background-color: #428bca;
+  }
+  span.twitter-typeahead {
+    width: 100%;
+  }
+  .input-group span.twitter-typeahead {
+    display: block !important;
+  }
+  .input-group span.twitter-typeahead .tt-dropdown-menu {
+    top: 32px !important;
+  }
+  .input-group.input-group-lg span.twitter-typeahead .tt-dropdown-menu {
+    top: 44px !important;
+  }
+  .input-group.input-group-sm span.twitter-typeahead .tt-dropdown-menu {
+    top: 28px !important;
+  }
+  #countries-typeahead .tt-dropdown-menu {
+    max-height: 150px;
+    overflow-y: scroll;
+  }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='vendor/typeahead.js/dist/typeahead.bundle.min.js') }}"></script>
+<script>
+  var substringMatcher = function(strs) {
+    return function findMatches(q, cb) {
+      var matches, substrRegex;
+
+      // an array that will be populated with substring matches
+      matches = [];
+
+      // regex used to determine if a string contains the substring `q`
+      substrRegex = new RegExp(q, 'i');
+
+      // iterate through the pool of strings and for any string that
+      // contains the substring `q`, add it to the `matches` array
+      $.each(strs, function(i, str) {
+        if (substrRegex.test(str)) {
+          // the typeahead jQuery plugin expects suggestions to a
+          // JavaScript object, refer to typeahead docs for more info
+          matches.push({ value: str });
+        }
+      });
+
+      cb(matches);
+    };
+  };
+
+  var countries = {{ countries|safe }}
+
+  $('#country-typeahead .typeahead').typeahead({
+    hint: false,
+    highlight: false,
+    minLength: 2
+  },
+  {
+    name: 'countries',
+    displayKey: 'value',
+    source: substringMatcher(countries)
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,22 @@
+<header class="navigation" role="banner" ng-init="expandedMenu = false">
+    <a ng-click="logo(auth.isAuthenticated)" class="logo">worldphone</a>
+
+    <a ng-click="expandedMenu = !expandedMenu" ng-show="auth.isAuthenticated && !inCall" class="nav-link navigation-menu-toggle">
+        <i ng-class="expandedMenu ? 'fa-times' : 'fa-navicon'" class="fa"><span>navigation icon</span></i>
+    </a>
+
+    <div class="navigation-wrapper">
+        <nav ng-show="auth.isAuthenticated && !inCall" ng-class="{ expanded: expandedMenu }" role="navigation">
+            <ul class="navigation-menu" ng-click="expandedMenu = false">
+                <li ui-sref-active="active" class="nav-link"><a ui-sref="profile"><i class="fa fa-user"><span>user icon</span></i> profile</a></li>
+                <li ui-sref-active="active" class="nav-link"><a ui-sref="newCall"><i class="fa fa-phone"><span>phone icon</span></i> new call</a></li>
+                <li ui-sref-active="active" class="nav-link"><a ui-sref="callHistory"><i class="fa fa-th-list"><span>list icon</span></i> history</a></li>
+            </ul>
+
+            <div ng-click="expandedMenu = false; logout()" class="nav-link sign-out">
+                <a><i class="fa fa-power-off"><span>sign out icon</span></i> sign out</a>
+            </div>
+        </nav>
+        <a ng-click="login()" ng-hide="auth.isAuthenticated" class="sign-in big button">login</a>
+    </div>
+</header>

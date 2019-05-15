@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html ng-app="worldphone" ng-controller="AppCtrl">
+<head>
+    <title ng-bind="pageTitle">The World Phone</title>
+
+    <meta property="og:title" content="The World Phone" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="http://theworldphone.com" />
+    <meta property="og:image" content="http://theworldphone.com/logo.png" />
+    <meta property="og:description" content="The World Phone gives language learners a platform to communicate">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <link rel="Shortcut Icon" href="assets/img/favicon.png" type="image/x-icon">
+
+    <!-- font awesome from BootstrapCDN -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+    <!-- <link rel="stylesheet" type="text/css" href="<%= file %>" /> -->
+    <link rel="stylesheet" type="text/css" href="style/app.css" />
+    <link rel="stylesheet" type="text/css" href="style/flag-icon.min.css" />
+
+    <!-- <script type="text/javascript" src="<%= file %>"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-resource.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.min.js"></script>
+
+    <!-- begin Auth0 block -->
+    <script src="//code.angularjs.org/1.2.16/angular-cookies.min.js"></script>
+    <script src="//cdn.auth0.com/js/lock-7.12.min.js"></script>
+    <script src="//cdn.rawgit.com/auth0/angular-storage/master/dist/angular-storage.js" type="text/javascript"></script>
+    <script src="//cdn.rawgit.com/auth0/angular-jwt/master/dist/angular-jwt.js" type="text/javascript"></script>
+    <script src="//cdn.auth0.com/w2/auth0-angular-4.js"> </script>
+    <!-- /end Auth0 block -->
+
+    <!-- begin Twilio block -->
+    <script src="https://media.twiliocdn.com/sdk/js/common/v0.1/twilio-common.min.js"></script>
+    <script src="https://media.twiliocdn.com/sdk/js/conversations/v0.13/twilio-conversations.min.js"></script>
+    <!-- /end Twilio block -->
+
+    <script type="text/javascript" src="app/app.js"></script>
+    <script type="text/javascript" src="app/constants.js"></script>
+    <script type="text/javascript" src="app/filters.js"></script>
+    <script type="text/javascript" src="app/app.controller.js"></script>
+    <script type="text/javascript" src="app/app.routes.js"></script>
+
+    <script type="text/javascript" src="app/layout/footer.directive.js"></script>
+    <script type="text/javascript" src="app/layout/header.directive.js"></script>
+    <script type="text/javascript" src="app/layout/modal.directive.js"></script>
+    <script type="text/javascript" src="app/layout/rating.directive.js"></script>
+
+    <!-- user module -->
+    <script type="text/javascript" src="app/user/user.module.js"></script>
+    <script type="text/javascript" src="app/user/user.service.js"></script>
+
+    <!-- call module -->
+    <script type="text/javascript" src="app/call/call.module.js"></script>
+    <script type="text/javascript" src="app/call/call.controller.js"></script>
+    <script type="text/javascript" src="app/call/call.service.js"></script>
+
+    <!-- call history module -->
+    <script type="text/javascript" src="app/call-history/call-history.module.js"></script>
+    <script type="text/javascript" src="app/call-history/call-history.controller.js"></script>
+
+    <!-- home module -->
+    <script type="text/javascript" src="app/home/home.module.js"></script>
+    <script type="text/javascript" src="app/home/home.controller.js"></script>
+
+    <!-- new call module -->
+    <script type="text/javascript" src="app/new-call/new-call.module.js"></script>
+    <script type="text/javascript" src="app/new-call/new-call.controller.js"></script>
+
+    <!-- profile module -->
+    <script type="text/javascript" src="app/profile/profile.module.js"></script>
+    <script type="text/javascript" src="app/profile/profile.controller.js"></script>
+    <script type="text/javascript" src="app/profile/profile.directives.js"></script>
+</head>
+<body>
+    <twp-header></twp-header>
+
+    <div class="body" ui-view></div>
+
+    <twp-footer ng-hide="inCall"></twp-footer>
+</body>
+</html>

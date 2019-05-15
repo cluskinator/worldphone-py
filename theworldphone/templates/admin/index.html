@@ -1,0 +1,101 @@
+
+{% extends "admin/layout.html" %}
+
+{% block body %}
+
+<div class="container">
+    <h3 class="page-header"><a href="{{ url_for('admin.pending_tefl_users') }}">Pending TEFL Requests</a></h3>
+    <table class='table table-bordered datatable'>
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Status</th>
+                <th>Role</th>
+                <th>Created Time</th>
+                <th></th>
+            </tr>
+        </thead>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.name }}</td>
+            <td>{{ user.status.capitalize() }}</td>
+            <td>{{ user.role.capitalize() }}</td>
+            <td>{{ user._created_at|format_date }}</td>
+            <td>
+                <a class="glyphicon glyphicon-ok" style="color:#5cb85c" href="{{ url_for('admin.appr_tefl', uid=user.uid, code=1) }}"></a>
+                <a class="glyphicon glyphicon-ban-circle" style="color:red" href="{{ url_for('admin.appr_tefl', uid=user.uid, code=0) }}"></a>
+            </td>
+
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<div class="container">
+    <h3 class="page-header"><a href="{{ url_for('admin.flagged_calls') }}">Flagged Calls</a></h3>
+    <table class='table table-bordered datatable'>
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Language(s)</th>
+                <th>Caller 1</th>
+                <th>Caller 2</th>
+                <th>Started</th>
+                <th>Duration</th>
+                <th>Recording</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for call in calls %}
+        <tr id="{{ call.id }}">
+            <td>{{ call.call_type.capitalize() }}</td>
+            <td>
+              {% if call.language1 %}
+                {{ call.language1.name }}
+              {% endif %}
+              {% if call.language2 %}
+                {{ call.language2.name }}
+              {% endif %}
+            </td>
+
+            <td>
+              <a href="{{ url_for('admin.user', user_uid=call.caller_uid) }}">
+                {{ call.caller_username }}
+              </a>
+              <span class="glyphicon glyphicon-globe" data-toggle="tooltip" data-placement="bottom" title="{{call.caller_ip}}"></span>
+            </td>
+
+            <td>
+              <a href="{{ url_for('admin.user', user_uid=call.callee_uid) }}">
+                {{ call.callee_username }}
+              </a>
+              <span class="glyphicon glyphicon-globe" data-toggle="tooltip" data-placement="bottom" title="{{call.callee_ip}}"></span>
+            </td>
+
+            <td>{{ call.start_time }}</td>
+            <td>{{ call.duration or 'N/A' }}</td>
+            <td>
+              Recordings are not currently supported.
+              <!-- <audio controls>
+                <source src="{{ call.recording_url }}" type="audio/mpeg">
+                Your browser does not support the audio element.
+              </audio> -->
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+
+<script>
+$(document).ready(function() {
+    $('table.datatable').dataTable();
+
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+});
+</script>
+{% endblock %}

@@ -1,0 +1,91 @@
+
+{% from "macros/_form.html" import render_field, render_checkbox %}
+
+{% set page_title = 'Verify Email' %}
+
+{% extends "frontend/layout.html" %}
+
+{% block body %}
+<div class="row">
+  <h3>&nbsp;</h3>
+    <div class="col-sm-6 col-sm-offset-3 col-md-8 col-md-offset-2">
+
+      <div class="panel panel-default">
+          <div class="panel-heading">
+              <h1 class="panel-title">{{_('Verify your email')}}, "{{ user.name }}"</h1>
+          </div><!-- /.panel-title -->
+
+          <div class="panel-body">
+            <form method="POST">
+              <div class="col-md-6">
+                {{ form.csrf_token }}
+                {{ form.activation_key }}
+                {{ render_field(form.password, class="form-control", placeholder="password") }}
+                {{ render_field(form.password_again, class="form-control", placeholder="confirm password") }}
+                <p class="help-block">Please set a new password</p>
+              </div>
+
+              <div class="col-md-6">
+                {{ render_field(form.gender_code, class="form-control") }}
+
+                {{ render_field(form.source_langs, id="native-language", multiple="multiple") }}
+
+                {{ render_field(form.target_langs, id="target-language", multiple="multiple") }}
+              </div>
+
+              <button type="submit" id="submit" class="btn btn-lg btn-info btn-block">{{_('Verify')}}</button>
+
+            </form>
+          </div>
+      </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block css_style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='vendor/flag-icon-css/css/flag-icon.min.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='vendor/bootstrap-multiselect/dist/css/bootstrap-multiselect.css') }}"/>
+<style type="text/css">
+  body:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: url('static/common-files/img/overlay.png');
+    opacity: 0.5;
+  }
+
+  body {
+    background-image: url("/static/img/bg/logout.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+  }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript" src="{{ url_for('static', filename='vendor/bootstrap-multiselect/dist/js/bootstrap-multiselect.js') }}"></script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#native-language').multiselect({
+            buttonWidth: '100%',
+            nonSelectedText: 'Select at least one',
+            templates: {
+
+            }
+        });
+        $('#target-language').multiselect({
+            buttonWidth: '100%',
+            nonSelectedText: 'Select at least one',
+            templates: {
+
+            }
+        });
+    });
+</script>
+{% endblock %}

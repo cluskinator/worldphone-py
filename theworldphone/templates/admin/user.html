@@ -1,0 +1,140 @@
+{% from "macros/_form.html" import render_field, render_checkbox %}
+
+{% extends "admin/layout.html" %}
+
+{% block body %}
+<div class="row">
+  <h3>&nbsp;</h3>
+    <div class="col-sm-6 col-sm-offset-1 col-md-offset-2 col-md-5">
+
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h1 class="panel-title"><strong>{{ user.name }}'s</strong> {{_('User Profile')}}</h1>
+            </div><!-- /.panel-title -->
+
+            <div class="panel-body">
+
+                <form class="form-horizontal" role="form">
+                  <div class="form-group">
+                    <label class="col-sm-2">Username</label>
+                    <div class="col-sm-10">
+                        <label class="pull-right"><strong>{{ user.name }}</strong></label>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2">Email</label>
+                    <div class="col-sm-10">
+                        <label class="pull-right"><a href="mailto:{{ user.email }}"><strong>{{ user.email }}</strong></a></label>
+                    </div>
+                  </div>
+                </form>
+
+                <hr>
+                <form class="form-horizontal" role="form">
+                  <div class="form-group">
+                    <label class="col-sm-2">Country</label>
+                    <div class="col-sm-10">
+                        <label class="pull-right">
+                            <strong>{{ countries[user.location] }}</strong>
+                            <span class="flag-icon flag-icon-{{ user.location|lower }}"></span>
+                        </label>
+                    </div>
+                  </div>
+
+                  {% if user.spoken_languages %}
+                  <div class="form-group">
+                    <label class="col-sm-12">Spoken Language(s)</label>
+                    <div class="col-sm-12">
+                        <label class="pull-right">
+                            {% for language in user.spoken_languages %}
+                                <strong>{{ language.name }}</strong>{% if not loop.last %},{% endif %}
+                            {% endfor %}
+                        </label>
+                    </div>
+                  </div>
+                  {% endif %}
+
+                  {% if user.learning_languages %}
+                  <div class="form-group">
+                    <label class="col-sm-12">Learning Language(s)</label>
+                    <div class="col-sm-12">
+                        <label class="pull-right">
+                            {% for language in user.learning_languages %}
+                                <strong>{{ language.name }}</strong>{% if not loop.last %},{% endif %}
+                            {% endfor %}
+                        </label>
+                    </div>
+                  </div>
+                  {% endif %}
+
+                </form>
+
+                <hr>
+                <form method="POST">
+                    {{ form.csrf_token }}
+                    {{ render_field(form.status, class="form-control") }}
+                    <button type="submit" id="submit" class="btn btn-lg btn-info btn-block">{{_('Update User')}}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-4 col-md-3">
+
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h1 class="panel-title"><strong>{{ user.name }}'s</strong> {{_('User Ratings')}}</h1>
+            </div><!-- /.panel-title -->
+
+            <div class="panel-body">
+
+                <form class="form-inline">
+                <fieldset>
+                    <!-- <label class="control-label"><strong>Overall</strong></label>
+                    <input name="overall" type="number" class="rating input-mini" value="{{ user.overall.stars() if user.overall else 0 }}"> -->
+
+                    <!-- <br> -->
+                    <label class="control-label"><strong>Grammar</strong></label>
+                    <input name="grammar" type="number" class="rating input-mini" value="{{ user.grammar.stars() if user.grammar else 0 }}">
+
+                    <br>
+                    <label class="control-label"><strong>Vocabulary</strong></label>
+                    <input name="vocabulary" type="number" class="rating input-mini" value="{{ user.vocabulary.stars() if user.vocabulary else 0 }}">
+
+                    <br>
+                    <label class="control-label"><strong>Accent</strong></label>
+                    <input name="accent" type="number" class="rating input-mini" value="{{ user.accent.stars() if user.accent else 0 }}">
+                </fieldset>
+                </form>
+            </div>
+
+            <div class="panel-footer">
+                <strong>Overall:</strong>
+                <span class="pull-right" style="margin-top: -12px;">
+                    <input name="overall" type="number" class="rating" value="{{ user.overall.stars() if user.overall else 0 }}">
+                </span>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block css_style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='vendor/flag-icon-css/css/flag-icon.min.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='vendor/bootstrap-star-rating/css/star-rating.min.css') }}" media="all" type="text/css" />
+<link rel="stylesheet" href="{{ url_for('static', filename='vendor/bootstrap-multiselect/dist/css/bootstrap-multiselect.css') }}"/>
+<style type="text/css">
+  body {
+    background-color: #fff;
+  }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='vendor/bootstrap-star-rating/js/star-rating.min.js') }}"></script>
+
+<script>
+    $("input.rating").rating({ min:0, max:5, step:0.5, size:'xs', showClear:false, showCaption:false, disabled:true});
+</script>
+{% endblock %}

@@ -1,0 +1,6 @@
+<div class="rate" ng-model="rating.hover" ng-init="rating.hover = 0" ng-mouseleave="rating.hover = 0">
+    <input type="number" ng-model="rating.value" min="1" max="5" required>
+    <i ng-repeat="n in [1,2,3,4,5]" ng-mouseover="rating.hover = n" ng-click="rating.value = n" ng-class="(rating.hover >= n || rating.value >= n) ? 'x' : 'o'" class="fa fa-{{ icon }}">
+        <span>{{ category }} icon</span>
+    </i>
+</div>

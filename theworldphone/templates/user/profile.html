@@ -1,0 +1,185 @@
+
+{% from "macros/_form.html" import render_field, render_checkbox %}
+{% extends 'frontend/layout.html' %}
+
+{% set page_title = 'Update Profile' %}
+
+
+{% block body %}
+<div class="row">
+  <h3>&nbsp;</h3>
+
+  {% if user.is_admin() %}
+  <div class="col-sm-6 col-sm-offset-3 col-md-6 col-md-offset-3">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+          <h1 class="panel-title">{{user.name}}'s {{_('Profile')}}</h1>
+        </div>
+
+        <div class="panel-body">
+          <form method="POST">
+            {{ form.csrf_token }}
+            {{ render_field(form.email, class="form-control") }}
+            {{ render_field(form.gender_code, class="form-control") }}
+            <button type="submit" id="submit" class="btn btn-lg btn-info btn-block">{{_('Save')}}</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% else %}
+  <div class="col-sm-6 col-sm-offset-1 col-md-offset-2 col-md-5">
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h1 class="panel-title">{{user.name}}'s {{_('Profile')}}</h1>
+      </div>
+
+      <div class="panel-body">
+        <form method="POST">
+          {{ form.csrf_token }}
+          {{ render_field(form.email, class="form-control") }}
+          {{ render_field(form.gender_code, class="form-control") }}
+
+          <label class="control-label">I live in...</label>
+          <label class="pull-right">
+            <strong>{{ countries[user.location] }}</strong>
+            <input class="form-control" id="location" name="location" type="hidden" value="{{user.location}}">
+            <span class="flag-icon flag-icon-{{ user.location|lower }}"></span>
+          </label>
+          <br><br>
+
+          {{ render_field(form.source_langs, id="native-language", multiple="multiple") }}
+          {{ render_field(form.target_langs, id="target-language", multiple="multiple") }}
+
+          <br>
+
+          <button type="submit" id="submit" class="btn btn-lg btn-info btn-block">{{_('Save')}}</button>
+
+        </form>
+        <hr>
+        <span><a href="{{ url_for('user.password') }}">Change Password</a></span>
+      </div>
+
+      {% if user.no_tefl() %}
+      <div class="panel-footer panel-default text-right">
+        <a id="request_tefl">{{_('Request TEFL status?')}}</a>
+      </div>
+      {% elif user.is_tefl_pending() %}
+      <div class="panel-footer panel-default text-right disabled">
+        {{_('Your TEFL request is pending.')}}
+      </div>
+      {% elif user.tefl_denied() %}
+      <div class="panel-footer panel-default text-right disabled">
+        {{_('Your TEFL request was denied.')}}
+      </div>
+      {% else %}
+      <div class="panel-footer panel-default text-right disabled">
+        {{_("Congrats! You're a TEFL instructor.")}}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="col-sm-4 col-md-3">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h1 class="panel-title">{{_('My Ratings')}}</h1>
+      </div>
+
+      <div class="panel-body">
+        <form class="form-inline">
+        <fieldset>
+          <label class="control-label"><strong>Vocabulary</strong></label>
+          <input name="vocabulary" type="number" class="rating input-mini" value="{{ current_user.get_ratings['vocabulary'] }}">
+
+          <br>
+          <label class="control-label"><strong>Accent</strong></label>
+          <input name="accent" type="number" class="rating input-mini" value="{{ current_user.get_ratings['accent'] }}">
+
+          <br>
+          <label class="control-label"><strong>Grammar</strong></label>
+          <input name="grammar" type="number" class="rating input-mini" value="{{ current_user.get_ratings['grammar'] }}">
+
+          <br>
+          <label class="control-label"><strong>Skill</strong></label>
+          <input name="skill" type="number" class="rating input-mini" value="{{ current_user.get_ratings['skill'] }}">
+
+          {% if user.is_tefl() %}
+          <br>
+          <label class="control-label"><strong>Ability</strong></label>
+          <input name="ability" type="number" class="rating input-mini" value="{{ current_user.get_ratings['ability'] }}">
+
+          <br>
+          <label class="control-label"><strong>Clarity</strong></label>
+          <input name="clarity" type="number" class="rating input-mini" value="{{ current_user.get_ratings['clarity'] }}">
+          {% endif %}
+        </fieldset>
+        </form>
+      </div>
+
+      <div class="panel-footer">
+        <strong>Overall:</strong>
+        <span class="pull-right" style="margin-top: -12px;">
+          <input name="overall" type="number" class="rating" value="{{ current_user.overall_rating }}">
+        </span>
+      </div>
+
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}
+
+{% block css_style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='vendor/flag-icon-css/css/flag-icon.min.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='vendor/bootstrap-star-rating/css/star-rating.min.css') }}" media="all" type="text/css" />
+<link rel="stylesheet" href="{{ url_for('static', filename='vendor/bootstrap-multiselect/dist/css/bootstrap-multiselect.css') }}"/>
+<style type="text/css">
+  body {
+    background-color: #fff;
+  }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript" src="{{ url_for('static', filename='vendor/bootstrap-multiselect/dist/js/bootstrap-multiselect.js') }}"></script>
+<script>
+$(document).ready(function() {
+        $('#native-language').multiselect({
+            buttonWidth: '100%',
+            nonSelectedText: 'Select at least one',
+            templates: {
+
+            }
+        });
+
+        $('#target-language').multiselect({
+            buttonWidth: '100%',
+            nonSelectedText: 'Select at least one',
+            templates: {
+
+            }
+        });
+
+        $(document).on('click', '#request_tefl', function(){
+            var data = {'id': '{{user.id}}'}
+            $.ajax({
+                url: "{{ url_for('user.request_tefl', rtype=0) }}",
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                async: false,
+                type: 'POST'
+            });
+            location.reload()
+        });
+    });
+</script>
+
+<script src="{{ url_for('static', filename='vendor/bootstrap-star-rating/js/star-rating.min.js') }}"></script>
+
+<script>
+    $("input.rating").rating({ min:0, max:5, step:0.5, size:'xs', showClear:false, showCaption:false, disabled:true});
+</script>
+{% endblock %}

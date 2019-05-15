@@ -1,0 +1,116 @@
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  overflow: scroll;
+}
+
+a, h1, h2, h3, h4, h5, h6 {
+  font-family: 'Nunito', sans-serif;
+}
+
+a.brand {
+  font-family: 'Nunito', sans-serif !important;
+}
+
+body > .navbar-collapse {
+  z-index: 1200;
+}
+
+/* Wrapper for page content to push down footer */
+#main-content {
+  padding-bottom: 60px;
+}
+
+.upper-button {
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+.bottom-button {
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+}
+.black-pick:hover {
+  background-color: #000;
+  border-color: #000;
+}
+.black-pick {
+  background-color: #202020;
+  border-color: #202020;
+}
+
+.plan {
+  min-height: 250px;
+}
+
+/* fixes for datatables */
+select.form-control.input-sm {
+  line-height: 20px;
+}
+
+a.glyphicon {
+  font-size: 1.2em;
+}
+
+.label-warning {
+  background-color: #f1c40f;
+}
+
+a {
+  color: #3498db;
+}
+a:hover {
+  color: #5dade2;
+}
+
+.form-control:focus {
+  border-color:#3498db;
+}
+
+.abuse-panel-heading {
+   cursor: pointer;
+}
+
+textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="datetime"]:focus, input[type="datetime:focus-local"],
+input[type="date"]:focus, input[type="month"]:focus, input[type="time"]:focus, input[type="week"]:focus, input[type="number"]:focus,
+input[type="email"]:focus, input[type="url"]:focus, input[type="search"]:focus, input[type="tel"]:focus, input[type="color"]:focus, input[type="checkbox"]:focus {
+  border-color: #3498db;
+}
+
+.dropdown-menu li.active > a, .dropdown-menu li.selected > a, .dropdown-menu li.active > a.highlighted, .dropdown-menu li.selected > a.highlighted {
+  background-color: #3498db;
+}
+
+select.selectpicker {
+  visibility: hidden
+}
+
+.bootstrap-select.btn-group .dropdown-menu {
+  margin-top: 5px !important;
+  margin-left: -2px;
+}
+
+.bootstrap-select.btn-group .dropdown-menu li:first-child > a {
+  padding-top: 7px;
+  border-radius: 0px;
+}
+
+table.datatable {
+  background-color: #fff;
+}
+
+div.dataTables_length label, div.dataTables_filter label, div.dataTables_info {
+  color: #000;
+}
+
+@media(min-width:768px){
+  .price-1 .plan .btn {
+    min-width: 190px;
+  }
+  .btn-group.bootstrap-select {
+    max-width: 190px;
+  }
+}

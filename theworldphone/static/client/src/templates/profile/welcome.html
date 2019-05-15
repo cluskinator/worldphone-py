@@ -1,0 +1,82 @@
+<div class="inner welcome">
+    <modal class="onboard" ng-init="showModal = (profile.user.status == 'new')" show="showModal" closeable="false" height="85%" width="90%">
+        <ng-form name="onboarding"">
+
+            <hgroup class="alt full">
+                <h1>welcome to worldphone!</h1>
+                <h2>answer the following questions to help us create a profile for you.</h2>
+            </hgroup>
+
+            <fieldset class="two of-four">
+                <h3><label for="gender">select your gender:</label></h3>
+                <div ng-init="onboarding.gender = profile.user.gender" class="light button-group">
+                    <label ng-repeat="gender in ['male', 'female', 'other']"
+                           ng-class="{checked: (gender == onboarding.gender)}">
+                        <input ng-model="onboarding.gender" id="gender" value="{{ gender }}" type="radio" required>
+                        <span class="button-group-item">{{ gender }}</span>
+                    </label>
+                </div>
+
+                <h3><label for="country">select your country:</label></h3>
+                <div ng-init="onboarding.country = profile.user.location; editing.country = !onboarding.country" ng-show="!editing.country" class="selector">
+                    <label ng-click="editing.country = true; onboarding.country = null">{{ profile.countries[onboarding.country] }}</label>
+                    <input ng-model="onboarding.country" type="text" required />
+                </div>
+                <div ng-show="editing.country" ng-mouseover="showCountries = true" ng-mouseleave="showCountries = false" class="selector">
+                    <input ng-model="countrySearch" id="country" type="text"/>
+                    <ul ng-show="showCountries || countrySearch.length"  ng-mouseover="showCountries = true" ng-mouseleave="showCountries = false">
+                        <li ng-repeat="country in profile.countriesArray | filter:{name:countrySearch} | orderBy:'name' track by country.name"
+                            ng-click="onboarding.country = country.code; editing.country = false; showCountries = false;">{{ country.name }}</li>
+                    </ul>
+                </div>
+
+                <h3><label for="spoken">select your native language:</label></h3>
+                <div ng-init="editing.spoken = true" ng-show="!editing.spoken" class="selector">
+                    <label ng-click="editing.spoken = true; onboarding.spokenLanguage = null">{{ onboarding.spokenLanguage.attributes.name }}</label>
+                    <input ng-model="onboarding.spokenLanguage" type="text" required />
+                </div>
+                <div ng-show="editing.spoken" ng-mouseover="showSpoken = true" ng-mouseleave="showSpoken = false" class="selector">
+                    <input ng-model="spokenSearch" id="spoken" type="text"/>
+                    <ul ng-show="showSpoken || spokenSearch.length"  ng-mouseover="showSpoken = true" ng-mouseleave="showSpoken = false">
+                        <li ng-repeat="language in profile.languageOptions | filter:{attributes:{name:spokenSearch}} | orderBy:'attributes.name' track by language.id"
+                            ng-click="onboarding.spokenLanguage = language; editing.spoken = false; showSpoken = false;">{{ language.attributes.name }}</li>
+                    </ul>
+                </div>
+
+                <h3><label for="learning">select your first language to learn:</label></h3>
+                <!-- minus native language -->
+                <div ng-init="editing.learning = true" ng-show="!editing.learning" class="selector">
+                    <label ng-click="editing.learning = true; onboarding.learningLanguage = null">{{ onboarding.learningLanguage.attributes.name }}</label>
+                    <input ng-model="onboarding.learningLanguage" type="text" required />
+                </div>
+                <div ng-show="editing.learning" ng-mouseover="showLearning = true" ng-mouseleave="showLearning = false" class="selector">
+                    <input ng-model="learningSearch" id="learning" type="text"/>
+                    <ul ng-show="showLearning || learningSearch.length"  ng-mouseover="showLearning = true" ng-mouseleave="showLearning = false">
+                        <li ng-repeat="language in profile.languageOptions | filter:{attributes:{name:learningSearch}} | orderBy:'attributes.name' track by language.id"
+                            ng-click="onboarding.learningLanguage = language; editing.learning = false; showLearning = false;">{{ language.attributes.name }}</li>
+                    </ul>
+                </div>
+
+            </fieldset>
+
+            <fieldset class="two of-four">
+                <h3>how would you rate your overall speaking ability in this learning language?</h3>
+                <rating category="overall" rating="onboarding.ratings['overall']" icon="{{ profile.ratingIcons['overall'] }}"></rating>
+
+                <h3>how would you rate your grammar ability?</h3>
+                <rating category="grammar" rating="onboarding.ratings['grammar']" icon="{{ profile.ratingIcons['grammar'] }}"></rating>
+
+                <h3>how would you rate your vocabulary?</h3>
+                <rating category="vocabulary" rating="onboarding.ratings['vocabulary']" icon="{{ profile.ratingIcons['vocabulary'] }}"></rating>
+
+                <h3>how would you rate your accent?</h3>
+                <rating category="accent" rating="onboarding.ratings['accent']" icon="{{ profile.ratingIcons['accent'] }}"></rating>
+            </fieldset>
+
+            <div class="full">
+                <button ng-click="profile.onboardUser(onboarding)" ng-disabled="onboarding.$invalid" class="btn big-btn">submit</button>
+                <span ng-show="onboarding.$invalid">please answer all questions to continue.</span>
+            </div>
+        </ng-form>
+    </modal>
+</div>

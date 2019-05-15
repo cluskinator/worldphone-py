@@ -1,0 +1,52 @@
+<div class="inner new-call">
+    <hgroup>
+        <h1>Make a New Call</h1>
+        <!-- <h2>select the type of call you want to make below</h2> -->
+    </hgroup>
+
+    <div class="cards">
+        <div class="card-case one of-three">
+            <!-- <h3>Random with Target</h3> -->
+            <div class="card">
+                <div class="card-body">
+                    <img src="assets/img/random_bg.jpg" alt="Random call background" />
+                    <p>Choose a language you want to learn and be paired with a person who speaks it.</p>
+
+                    <label for="single-language">Your Target Language</label>
+                    <select ng-model="newCall.language" name="single-language" id="single-language">
+                        <option ng-repeat="language in newCall.languageOptions | filter:'English' | orderBy:'attributes.name'"
+                                ng-init="newCall.language = (language.attributes.name == 'English' ? language.id : newCall.language)"
+                                value="{{ language.id }}">{{ language.attributes.name }}</option>
+                    </select>
+                </div>
+
+                <a ui-sref="call({ callLanguages: [newCall.language], callType: 'random' })">
+                    <button class="fern button" type="submit"><i class="fa fa-phone"><span>phone icon</span></i> Make Call</button>
+                </a>
+            </div>
+        </div>
+
+        <!-- <div class="card-case one of-three">
+            <h3>Exchange</h3>
+            <div class="card">
+                <div class="card-body">
+                    <p>Choose your speaking language and target language, and be paired with someone who speaks your target language to teach each other.</p>
+
+                    <label for="spoken-language">Your Speaking Language</label>
+                    <select ng-model="newCall.spokenLanguage" name="spoken-language" id="spoken-language">
+                        <option ng-repeat="language in newCall.user.spokenLanguages | orderBy:'attributes.name'" value="{{ language.id }}">{{ language.attributes.name }}</option>
+                    </select>
+
+                    <label for="learning-language">Your Target Language</label>
+                    <select ng-model="newCall.learningLanguage" name="learning-language" id="learning-language">
+                        <option ng-repeat="language in newCall.languageOptions | filter:'English' | orderBy:'attributes.name'" value="{{ language.id }}">{{ language.attributes.name }}</option>
+                    </select>
+                </div>
+
+                <a ui-sref="call({ callLanguages: [newCall.spokenLanguage, newCall.learningLanguage], callType: 'exchange' })">
+                    <button class="fern button" type="submit"><i class="fa fa-phone"><span>phone icon</span></i> Make Call</button>
+                </a>
+            </div>
+        </div> -->
+    </div>
+</div>

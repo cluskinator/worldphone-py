@@ -1,0 +1,60 @@
+<section class="price-1">
+  <h3><strong>Make a call.</strong></h3>
+  <br>
+  <div class="row plans">
+      <div class="col-sm-4">
+          <div class="plan">
+              <div class="title" style="border-bottom:3px solid #ebedee;;margin-bottom:20px;">Exchange</div>
+              <a id="exchange" class="btn btn-info call">Make A Call</a>
+              <br><br>
+
+              <select id="exchange_slang" class="selectpicker" multiple data-size="4" data-dropup-auto=false title='Select Languages'>
+                <optgroup label="Your Language" data-max-options="1">
+                {% for l in languages %}
+                  <option value="{{ l }}">{{ languages[l] }}</option>
+                {% endfor %}
+                </optgroup>
+                <optgroup label="Their Language" data-max-options="1">
+                {% for l in languages %}
+                  <option value="{{ l }}">{{ languages[l] }}</option>
+                {% endfor %}
+                </optgroup>
+              </select>
+
+              <p id="xchg_warn" class="help-block text-danger hidden">
+                You must choose two different languages.
+              </p>
+
+              <br>
+          </div>
+      </div>
+
+      <div class="col-sm-4">
+          <div class="plan middle-plan">
+              <div class="title" style="border-bottom:3px solid #ebedee;;margin-bottom:20px;">Random</div>
+              <a id="random" class="btn btn-info" href="#">Make A Call</a>
+              <br><br>
+              <div class="center-block">
+              <select id="random_lang" class="selectpicker" data-size="4" data-dropup-auto=false>
+                <option value="" disabled selected style='display:none;'>Select Language</option>
+                {% for l in languages %}
+                  <option value="{{ l }}">{{ languages[l] }}</option>
+                {% endfor %}
+              </select>
+              </div>
+              <br><br>
+            </div>
+      </div>
+
+      <div class="col-sm-4">
+          <div class="plan">
+              <div class="title" style="border-bottom:3px solid #ebedee;;margin-bottom:20px;">TEFL</div>
+              <a id="tefl_s" class="btn btn-info" href="#">Make A Call As Student</a>
+              {% if user.is_tefl() %}
+              <br><br>
+              <a id="tefl_i" class="btn btn-info" href="#">Make A Call As Instructor</a>
+              {% endif %}
+          </div>
+      </div>
+  </div>
+</section>

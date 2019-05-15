@@ -1,0 +1,148 @@
+
+{% extends "admin/layout.html" %}
+
+{% block body %}
+<div class="container">
+    <h3 class="page-header">{{ title }}</h3>
+    <!-- Split button -->
+    <div class="btn-group">
+      <button type="button" class="btn btn-sm btn-warning">Action</button>
+      <button type="button" class="btn btn-sm btn-warning dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+        <span class="caret"></span>
+        <span class="sr-only">Toggle Dropdown</span>
+      </button>
+      <ul class="dropdown-menu" role="menu">
+        <li id="edit_btn" class="disabled"><a href="#">Edit User</a></li>
+        {% if title != 'TEFL Users' %}
+        <!-- <li id="pair_btn" class="disabled"><a href="#">Pair Users</a></li> -->
+        {% endif %}
+        <li class="divider"></li>
+        <li id="ban_btn" class="disabled"><a href="#">Ban User(s)</a></li>
+        <li class="divider"></li>
+        <li id="clear_btn"><a href="#">Clear Selected</a></li>
+      </ul>
+    </div>
+    <br><br>
+
+    <table class='table table-bordered datatable'>
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Status</th>
+                <th>Role</th>
+                <th>Created Time</th>
+                <th>Location</th>
+                <th>Overall Rating</th>
+                <!-- <th></th> -->
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+        <tr id="{{ user.uid }}">
+            <td><a href="{{ url_for('admin.user', user_uid=user.uid) }}">{{ user.name }}</a></td>
+
+            <td><span class="label label-{% if user.status == 'active' %}success{% elif user.status == 'new'%}warning{% else %}danger{% endif %}">{{ user.status|upper }}</span></td>
+
+            <td>{{ user.role.capitalize() }}</td>
+            <td>{{ user._created_at|format_date }}</td>
+            <td><span class="flag-icon flag-icon-{{ user.location|lower }}"></span> {{ countries[user.location] }}</td>
+            <td>{{ user.overall.stars() if user.overall else 'N/A' }}</td>
+            <!-- <td><a class="glyphicon glyphicon-edit" href="{{ url_for('admin.user', user_uid=user.uid) }}"></a></td> -->
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+
+$(document).ready(function() {
+    var selected = [];
+
+    function update_action_btns() {
+        if (selected.length == 1) {
+            $('#edit_btn').removeClass('disabled');
+            $('#pair_btn').addClass('disabled');
+            $('#ban_btn').removeClass('disabled');
+        }
+        if (selected.length == 2) {
+            $('#edit_btn').addClass('disabled');
+            $('#pair_btn').removeClass('disabled');
+            $('#ban_btn').removeClass('disabled');
+        }
+        if (selected.length > 2) {
+            $('#edit_btn').addClass('disabled');
+            $('#pair_btn').addClass('disabled');
+            $('#ban_btn').removeClass('disabled');
+        }
+    }
+
+    $('table.datatable').dataTable({
+        "rowCallback": function(row, data) {
+            if ($.inArray(data.DT_RowId, selected) !== -1 ) {
+                $(row).addClass('selected');
+            }
+        }
+    });
+
+    $('td a').click(function(event){
+        event.stopPropagation();
+    });
+
+    $('table.datatable tbody').on('click', 'tr', function () {
+        var id = this.id;
+        var index = $.inArray(id, selected);
+        if ( index === -1 )
+            selected.push( id );
+        else
+            selected.splice(index, 1);
+        update_action_btns();
+        $(this).toggleClass('active');
+    });
+
+
+    $('#edit_btn').on('click', function () {
+        location.href = '/admin/user/' + selected[0];
+    });
+
+    // $('#pair_btn').on('click', function () {
+    //     if (window.confirm("Are you sure you want to pair these users?", selected)) {
+    //         var data = {'ids': selected};
+    //         $.ajax({
+    //             url: "", // url_for('call.manual_pair')
+    //             data: JSON.stringify(data),
+    //             contentType: 'application/json',
+    //             type: 'POST',
+    //             success: function(data) {
+    //                 alert(data['status']);
+    //            }
+    //         });
+    //     }
+    // });
+
+    $('#ban_btn').on('click', function () {
+        if (window.confirm("Are you sure you want to ban these people?")) {
+            console.log('ban hammer dropping in 3... 2... 1');
+            var data = {'uids': selected}
+            $.ajax({
+                url: "{{ url_for('admin.ban_user') }}",
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                type: 'POST',
+                success: function(data) {
+                    window.location.reload(true);
+               }
+            });
+        }
+    });
+
+    $('#clear_btn').on('click', function () {
+        var rows = $("table.datatable").dataTable().fnGetNodes();
+        for(var i=0; i < rows.length; i++)
+            $(rows[i]).removeClass('active')
+        selected = [];
+    });
+
+});
+</script>
+{% endblock %}

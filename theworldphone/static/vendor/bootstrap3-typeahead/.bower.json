@@ -1,0 +1,29 @@
+{
+  "name": "bootstrap3-typeahead",
+  "authors": [
+    "bassjobsen"
+  ],
+  "main": [
+    "bootstrap3-typeahead.js"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": ">=1.7.0"
+  },
+  "homepage": "https://github.com/bassjobsen/Bootstrap-3-Typeahead",
+  "_release": "396a9d8876",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "396a9d8876bbcfe7d59d360b9c49f79f2e10d8e7"
+  },
+  "_source": "git@github.com:bassjobsen/Bootstrap-3-Typeahead.git",
+  "_target": "master",
+  "_originalSource": "git@github.com:bassjobsen/Bootstrap-3-Typeahead.git"
+}

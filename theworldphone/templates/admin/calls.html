@@ -1,0 +1,210 @@
+
+{% extends "admin/layout.html" %}
+
+{% block body %}
+
+<style>
+    i.ban-btn {
+        cursor: pointer;
+    }
+
+    .datatable tr > td:last-child {
+        padding-left: 1.25em;
+    }
+</style>
+
+<div class="container">
+    <!-- <h3 class="page-header">Calls Map</h3>
+    <div id="map_placeholder" class="well" style="width: 100%; height: 350px;">
+      <h1 class="page-header text-center"><strong>calls map</strong></h1>
+      <h3 class="text-center">loading <i class="fa fa-spinner fa-spin"></i></h3>
+    </div>
+    <div id="calls_map" class="hidden" style="width: 100%; height: 350px;"></div> -->
+
+    <h3 class="page-header">Calls Data</h3>
+    <table class='table table-bordered datatable'>
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Language(s)</th>
+                <!-- <th>Status</th> -->
+                <th>Caller 1</th>
+                <th>Caller 2</th>
+                <th>Started</th>
+                <th>Duration</th>
+                <!-- <th>Recording</th> -->
+                <th>Quality</th>
+                <th><span class="glyphicon glyphicon-flag text-warning" aria-hidden="true"></span></th>
+            </tr>
+        </thead>
+        {% for call in calls %}
+        <tr id="{{ call.uid }}" data-flagged="{{ call.flagged }}">
+            <td>
+              {{ call.call_type.capitalize() }}
+            </td>
+
+            <td>
+              {% if call.language2 and call.language2 != call.language1 %}
+                {{ call.language1.name }}, {{ call.language2.name }}
+              {% elif call.language1 %}
+                {{ call.language1.name }}
+              {% else %}
+                N/A
+              {% endif %}
+            </td>
+            <!-- <td>{{ call.status }}</td> -->
+
+            <td>
+              <a href="{{ url_for('admin.user', user_uid=call.callee_uid) }}">
+                {{ call.callee_username }}
+              </a>
+              <span class="glyphicon glyphicon-globe" data-toggle="tooltip" data-placement="bottom" title="{{ call.caller_ip }}"></span>
+            </td>
+
+            <td>
+              <a href="{{ url_for('admin.user', user_uid=call.caller_uid) }}">
+                {{ call.caller_username }}
+              </a>
+              <span class="glyphicon glyphicon-globe" data-toggle="tooltip" data-placement="bottom" title="{{ call.callee_ip }}"></span>
+            </td>
+
+            <td>{{ call.start_time|local_tz }}</td>
+            <td>{{ call.duration or 'N/A' }}</td>
+            <!-- <td>Recordings are not currently supported.</td> -->
+            <td>
+              {% if call.callee_quality %}{{ call.callee_quality }}/5{% else %}N/A{% endif%}
+              and
+              {% if call.caller_quality %}{{ call.caller_quality }}/5{% else %}N/A{% endif%}
+            </td>
+            <td>
+              {% if call.flagged %}
+              <span class="glyphicon glyphicon-flag text-warning" aria-hidden="true"><span class="sr-only">flagged</span></span>
+              {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="detail-modal" tabindex="-1" role="dialog" aria-labelledby="detail-modal-label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content"></div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    $('table.datatable').dataTable();
+
+    // FLAGS
+    $('td a').click(function(event){
+        event.stopPropagation();
+    });
+
+    $('table.datatable tbody').on('click', 'tr', function () {
+        if ($(this).data('flagged') == 'True') {
+          var data = this.id;
+          $.ajax({
+              url: "{{ url_for('admin.get_call_details') }}",
+              data: JSON.stringify(data),
+              contentType: 'application/json',
+              type: 'POST',
+              success: function (result) {
+                  $('.modal-content').html(result.html);
+                  $('#detail-modal').modal();
+              }
+          });
+          $(this).toggleClass('active');
+        }
+    });
+
+
+    $('#detail-modal').on('hidden.bs.modal', function () {
+        var rows = $("table.datatable").dataTable().fnGetNodes();
+        for(var i=0; i < rows.length; i++)
+            $(rows[i]).removeClass('active')
+    });
+
+    // $(document).on({
+    //   mouseenter: function(){
+    //     $(this).find('i.ban-btn').fadeIn();
+    //   },
+    //   mouseleave: function(){
+    //     $(this).find('i.ban-btn').fadeOut();
+    //   }
+    // }, 'td.violator');
+
+
+    $(document).on('click', 'i.ban-btn', function(){
+        var _this = $(this);
+        if (window.confirm("Are you sure you want to ban this user?")) {
+            _this.show().removeClass('fa-times-circle').addClass('fa-circle-o-notch fa-spin');
+            var uid = $(this).data('user');
+            var data = {'uids': uid}
+            $.ajax({
+                url: "{{ url_for('admin.ban_user') }}",
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                async: false,
+                cache: false,
+                type: 'POST',
+                success: function (result) {
+                    _this.removeClass('fa-circle-o-notch fa-spin ban-btn').addClass('fa-lock');
+                }
+            });
+        }
+    });
+
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    });
+
+    // // MAP
+    // var mapData = {};
+    // $.ajax({
+    //     url: "{# url_for('admin.ips_to_geo') #}?latlng=true",
+    //     async: false,
+    //     success: function(data){
+    //         mapData = data;
+    //     }
+    // });
+    // console.log(mapData);
+
+    // var map;
+    // function initialize() {
+    //     var center = new google.maps.LatLng(20, 0);
+
+    //     map = new google.maps.Map(document.getElementById('calls_map'), {
+    //       zoom: 2,
+    //       minZoom: 2,
+    //       center: center,
+    //       mapTypeId: google.maps.MapTypeId.ROADMAP
+    //     });
+
+    //     var markers = [];
+    //     for (var i = 0; i < mapData.count; i++) {
+    //       var point = mapData.points[i];
+    //       var latLng = new google.maps.LatLng(point[0], point[1]);
+    //       var marker = new google.maps.Marker({
+    //         position: latLng
+    //       });
+    //       markers.push(marker);
+    //     }
+    //     var markerCluster = new MarkerClusterer(map, markers);
+    //   }
+
+    //   google.maps.event.addDomListener(window, 'load', initialize);
+
+    //   // hide placeholder and display map
+    //   $('#map_placeholder').addClass('hidden');
+    //   $('#calls_map').removeClass('hidden');
+
+    //   $(function () {
+    //     $('[data-toggle="tooltip"]').tooltip()
+    //   });
+
+});
+</script>
+
+{% endblock %}
